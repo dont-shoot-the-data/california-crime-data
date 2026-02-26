@@ -63,6 +63,9 @@ body {
 }
 
 /* ============ SECTION DIVIDERS ============ */
+/* Offset scroll targets for fixed nav */
+section[id] { scroll-margin-top: 70px; }
+
 .section-divider {
   position: relative;
   height: 120px;
@@ -338,7 +341,7 @@ body {
 .hero-meta {
   display: flex;
   gap: 40px;
-  margin-top: 50px;
+  margin-top: 30px;
   animation: fadeIn 1s ease 1.4s both;
 }
 
@@ -424,8 +427,9 @@ body {
 .section-nav-arrow {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 20px;
   padding-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .section-nav-arrow a {
@@ -492,11 +496,11 @@ body {
 
 /* ============ MAP SECTION ============ */
 .map-section {
-  padding: 80px 20px 20px;
+  padding: 20px 20px 20px;
   max-width: 1200px;
   margin: 0 auto;
-  height: 100vh;
-  height: 100dvh;
+  height: calc(100vh - 70px);
+  height: calc(100dvh - 70px);
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -526,7 +530,7 @@ body {
 .section-desc {
   color: var(--text-secondary);
   margin-top: 16px;
-  max-width: 560px;
+  max-width: 720px;
   margin-left: auto;
   margin-right: auto;
   line-height: 1.6;
@@ -536,7 +540,7 @@ body {
   position: relative;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   flex: 1;
   min-height: 0;
   overflow: visible;
@@ -544,9 +548,10 @@ body {
 
 .california-map {
   position: relative;
-  width: 500px;
-  height: 780px;
-  transform-origin: center center;
+  width: 100%;
+  max-width: 425px;
+  max-height: 100%;
+  aspect-ratio: 500 / 780;
 }
 
 .california-map svg {
@@ -567,72 +572,55 @@ body {
 }
 
 /* City markers */
+/* City markers (SVG-native) */
 .city-marker {
-  position: absolute;
   cursor: pointer;
-  z-index: 10;
 }
 
-.city-dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--accent-red);
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.dot-fill {
+  fill: var(--accent-red);
+  transition: r 0.3s ease;
+}
+.dot-fill.denied {
+  fill: var(--text-muted);
 }
 
-.city-dot::after {
-  content: '';
-  position: absolute;
-  top: -6px; left: -6px;
-  width: 26px; height: 26px;
-  border-radius: 50%;
-  border: 1px solid rgba(230,57,70,0.4);
-  animation: pulse-ring 2s ease infinite;
+.dot-pulse {
+  fill: none;
+  stroke: rgba(230,57,70,0.4);
+  stroke-width: 1;
+  animation: svg-pulse 2s ease infinite;
+}
+.dot-pulse.denied {
+  stroke: rgba(85,85,106,0.3);
 }
 
-.city-dot.denied {
-  background: var(--text-muted);
+.city-marker:hover .dot-fill {
+  r: 10;
+  filter: drop-shadow(0 0 12px rgba(230,57,70,0.6));
+}
+.city-marker:hover .dot-fill.denied {
+  filter: drop-shadow(0 0 12px rgba(85,85,106,0.5));
 }
 
-.city-dot.denied::after {
-  border-color: rgba(85,85,106,0.3);
-}
-
-.city-marker:hover .city-dot {
-  transform: scale(1.5);
-  box-shadow: 0 0 24px rgba(230,57,70,0.6);
-}
-
-.city-marker:hover .city-dot.denied {
-  box-shadow: 0 0 24px rgba(85,85,106,0.5);
-}
-
-.city-dot.prr-public {
-  background: #d4880e;
-}
-.city-dot.prr-public::after {
-  border-color: rgba(212,136,14,0.3);
-}
-.city-marker:hover .city-dot.prr-public {
-  box-shadow: 0 0 24px rgba(212,136,14,0.6);
-}
-
-.city-label {
-  position: absolute;
-  white-space: nowrap;
+.dot-label {
+  font-family: 'Source Code Pro', monospace;
   font-size: 10px;
   font-weight: 600;
-  color: var(--text-secondary);
+  fill: var(--text-secondary);
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  transition: color 0.3s ease;
+  transition: fill 0.3s ease;
   pointer-events: none;
 }
 
-.city-marker:hover .city-label {
-  color: var(--text-primary);
+.city-marker:hover .dot-label {
+  fill: var(--text-primary);
+}
+
+@keyframes svg-pulse {
+  0% { r: 13; opacity: 0.6; }
+  100% { r: 18; opacity: 0; }
 }
 
 @keyframes pulse-ring {
@@ -643,25 +631,52 @@ body {
 /* Mobile map scaling */
 @media (max-width: 540px) {
   .map-section {
-    height: 100vh;
-    height: 100dvh;
+    height: calc(100vh - 70px);
+    height: calc(100dvh - 70px);
+    padding-top: 16px;
+    padding-bottom: 10px;
+  }
+  .map-section .section-header {
+    margin-bottom: 0;
+  }
+  .map-section .section-label {
+    margin-bottom: 6px;
+  }
+  .map-section .section-desc {
+    margin-top: 6px;
   }
   .map-container {
-    overflow: hidden;
+    overflow: visible;
   }
-  .city-label {
-    font-size: 9px;
+  .section-nav-arrow {
+    margin-top: 10px;
   }
-  .city-dot {
-    width: 16px;
-    height: 16px;
+  .dot-pulse {
+    stroke-width: 2;
+    stroke: rgba(230,57,70,0.7);
+    animation: svg-pulse-mobile 1.5s ease infinite;
   }
+  .dot-pulse.denied {
+    stroke: rgba(85,85,106,0.5);
+  }
+  .audio-control {
+    display: none;
+  }
+}
+
+@keyframes svg-pulse-mobile {
+  0% { r: 13; opacity: 0.8; }
+  50% { opacity: 0.4; }
+  100% { r: 26; opacity: 0; }
 }
 
 @media (min-width: 541px) and (max-width: 768px) {
   .map-section {
-    height: 100vh;
-    height: 100dvh;
+    height: calc(100vh - 70px);
+    height: calc(100dvh - 70px);
+  }
+  .audio-control {
+    display: none;
   }
 }
 
@@ -835,7 +850,7 @@ body {
 
 /* ============ CITY DETAIL SECTION ============ */
 .city-details {
-  padding: 80px 20px;
+  padding: 20px 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -1299,7 +1314,7 @@ body {
 
 /* ============ STATEWIDE SECTION ============ */
 .statewide-section {
-  padding: 80px 20px;
+  padding: 20px 20px;
   position: relative;
 }
 
@@ -1490,8 +1505,14 @@ body {
   .modal-content { padding: 24px 16px; }
   .modal-title { font-size: 20px; }
   .preview-card { display: none; }
-  .hero-meta { flex-direction: column; gap: 12px; align-items: center; }
-  .statewide-section { padding: 40px 12px; }
+  .hero-meta { flex-direction: row; gap: 24px; align-items: center; margin-top: 20px; }
+  .hero-stat-num { font-size: 22px; }
+  .hero-stat-label { font-size: 9px; letter-spacing: 1.5px; }
+  .hero-subtitle { margin-top: 18px; }
+  .scroll-indicator { bottom: 24px; }
+  .statewide-section { padding: 16px 12px; }
+  .city-details { padding: 16px 12px; }
+  .transparency-section { padding: 16px 12px; }
 }
 
 .comparison-card {
@@ -1608,7 +1629,7 @@ body {
 
 /* ============ TRANSPARENCY SECTION ============ */
 .transparency-section {
-  padding: 80px 20px;
+  padding: 20px 20px;
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -1662,7 +1683,7 @@ body {
 
 /* ============ METHODOLOGY ============ */
 .methodology-section {
-  padding: 80px 20px;
+  padding: 20px 20px;
   background: rgba(255,255,255,0.01);
 }
 
@@ -2004,70 +2025,80 @@ body {
   <div class="map-container reveal scale-in">
     <div class="california-map">
       <!-- Real California outline from US Census GeoJSON data -->
-      <svg viewBox="0 0 500 780" xmlns="http://www.w3.org/2000/svg">
+      <svg viewBox="0 0 500 780" xmlns="http://www.w3.org/2000/svg" overflow="visible">
         <path class="ca-outline" d="M 72.7 146.4 L 111.0 146.1 L 171.0 146.9 L 217.4 146.9 L 217.6 236.0 L 217.4 301.2 L 275.0 347.4 L 329.4 392.8 L 372.4 429.8 L 403.3 457.1 L 457.7 507.0 L 457.7 513.5 L 465.0 522.0 L 471.2 535.5 L 480.0 542.8 L 474.6 549.6 L 467.5 553.0 L 462.1 562.0 L 463.8 574.1 L 462.6 581.7 L 453.5 589.1 L 456.5 608.3 L 462.6 608.5 L 465.0 618.1 L 462.6 622.6 L 453.8 624.6 L 394.4 629.4 L 346.1 633.9 L 340.7 627.1 L 340.5 616.4 L 337.0 603.7 L 330.7 594.7 L 316.7 582.3 L 298.8 570.8 L 295.4 573.9 L 288.5 571.9 L 289.5 566.8 L 281.6 556.4 L 271.1 558.6 L 252.5 551.0 L 249.8 544.8 L 237.2 537.2 L 223.0 537.5 L 211.3 534.1 L 196.3 535.5 L 188.5 528.7 L 190.2 514.4 L 187.5 512.1 L 189.2 501.9 L 177.4 494.3 L 176.9 483.9 L 172.5 483.3 L 165.2 474.3 L 160.0 472.3 L 157.8 466.7 L 140.6 445.6 L 132.5 439.3 L 130.8 422.7 L 134.3 424.1 L 137.5 414.3 L 131.1 405.2 L 123.2 406.4 L 112.9 398.2 L 109.3 391.7 L 110.0 385.5 L 104.8 377.3 L 104.8 363.8 L 113.2 363.8 L 109.7 344.9 L 106.1 346.9 L 105.3 356.2 L 96.5 358.1 L 86.0 351.1 L 84.2 339.0 L 77.4 329.4 L 68.3 323.5 L 63.4 316.7 L 50.2 303.4 L 52.4 299.5 L 46.2 282.3 L 48.9 272.7 L 45.0 258.3 L 33.5 244.2 L 22.2 236.3 L 20.0 227.0 L 31.3 204.5 L 33.5 196.8 L 31.3 190.9 L 35.4 175.4 L 31.8 161.3 L 26.9 157.9 L 28.8 146.6 Z"/>
+
+        <!-- City markers inside SVG coordinate space -->
+        <!-- Sacramento: inland Central Valley, NE of Bay Area -->
+        <g class="city-marker" data-city="sacramento" onmouseenter="showPreview('sacramento', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse" cx="168" cy="305" r="13"/>
+          <circle class="dot-fill" cx="168" cy="305" r="7"/>
+          <text class="dot-label" x="184" y="310" text-anchor="start">Sacramento</text>
+        </g>
+
+        <!-- Oakland: east side of SF Bay, clearly inland -->
+        <g class="city-marker" data-city="oakland" onmouseenter="showPreview('oakland', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse" cx="130" cy="355" r="13"/>
+          <circle class="dot-fill" cx="130" cy="355" r="7"/>
+          <text class="dot-label" x="114" y="349" text-anchor="end">Oakland</text>
+        </g>
+
+        <!-- San Francisco: on the peninsula, at the coast -->
+        <g class="city-marker" data-city="san_francisco" onmouseenter="showPreview('san_francisco', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse" cx="115" cy="370" r="13"/>
+          <circle class="dot-fill" cx="115" cy="370" r="7"/>
+          <text class="dot-label" x="99" y="380" text-anchor="end">San Francisco</text>
+        </g>
+
+        <!-- San Jose: south end of SF Bay, inland -->
+        <g class="city-marker" data-city="san_jose" onmouseenter="showPreview('san_jose', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse" cx="140" cy="400" r="13"/>
+          <circle class="dot-fill" cx="140" cy="400" r="7"/>
+          <text class="dot-label" x="156" y="405" text-anchor="start">San José</text>
+        </g>
+
+        <!-- Fresno: Central Valley, south of Sacramento -->
+        <g class="city-marker" data-city="fresno" onmouseenter="showPreview('fresno', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse denied" cx="235" cy="435" r="13"/>
+          <circle class="dot-fill denied" cx="235" cy="435" r="7"/>
+          <text class="dot-label" x="251" y="440" text-anchor="start">Fresno</text>
+        </g>
+
+        <!-- Bakersfield: southern Central Valley -->
+        <g class="city-marker" data-city="bakersfield" onmouseenter="showPreview('bakersfield', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse denied" cx="280" cy="500" r="13"/>
+          <circle class="dot-fill denied" cx="280" cy="500" r="7"/>
+          <text class="dot-label" x="296" y="505" text-anchor="start">Bakersfield</text>
+        </g>
+
+        <!-- Los Angeles: SoCal coast -->
+        <g class="city-marker" data-city="los_angeles" onmouseenter="showPreview('los_angeles', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse denied" cx="310" cy="558" r="13"/>
+          <circle class="dot-fill denied" cx="310" cy="558" r="7"/>
+          <text class="dot-label" x="326" y="553" text-anchor="start">Los Angeles</text>
+        </g>
+
+        <!-- Anaheim: inland SE of LA -->
+        <g class="city-marker" data-city="anaheim" onmouseenter="showPreview('anaheim', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse denied" cx="328" cy="572" r="13"/>
+          <circle class="dot-fill denied" cx="328" cy="572" r="7"/>
+          <text class="dot-label" x="344" y="577" text-anchor="start">Anaheim</text>
+        </g>
+
+        <!-- Long Beach: coast, south of LA -->
+        <g class="city-marker" data-city="long_beach" onmouseenter="showPreview('long_beach', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse denied" cx="305" cy="575" r="13"/>
+          <circle class="dot-fill denied" cx="305" cy="575" r="7"/>
+          <text class="dot-label" x="289" y="580" text-anchor="end">Long Beach</text>
+        </g>
+
+        <!-- San Diego: SW corner, above the Mexico border -->
+        <g class="city-marker" data-city="san_diego" onmouseenter="showPreview('san_diego', event)" onmouseleave="hidePreview()" style="cursor:pointer">
+          <circle class="dot-pulse denied" cx="345" cy="620" r="13"/>
+          <circle class="dot-fill denied" cx="345" cy="620" r="7"/>
+          <text class="dot-label" x="361" y="625" text-anchor="start">San Diego</text>
+        </g>
       </svg>
-
-      <!-- City markers — real geographic positions from lat/lon conversion -->
-      <!-- Sacramento -->
-      <div class="city-marker" style="left: 150px; top: 322px;" data-city="sacramento" onmouseenter="showPreview('sacramento', event)" onmouseleave="hidePreview()">
-        <div class="city-dot"></div>
-        <div class="city-label" style="left: 22px; top: -4px;">Sacramento</div>
-      </div>
-
-      <!-- Oakland -->
-      <div class="city-marker" style="left: 115px; top: 362px;" data-city="oakland" onmouseenter="showPreview('oakland', event)" onmouseleave="hidePreview()">
-        <div class="city-dot"></div>
-        <div class="city-label" style="right: 22px; top: -14px;">Oakland</div>
-      </div>
-
-      <!-- San Francisco -->
-      <div class="city-marker" style="left: 109px; top: 364px;" data-city="san_francisco" onmouseenter="showPreview('san_francisco', event)" onmouseleave="hidePreview()">
-        <div class="city-dot"></div>
-        <div class="city-label" style="right: 22px; top: 6px;">San Francisco</div>
-      </div>
-
-      <!-- San Jose -->
-      <div class="city-marker" style="left: 133px; top: 386px;" data-city="san_jose" onmouseenter="showPreview('san_jose', event)" onmouseleave="hidePreview()">
-        <div class="city-dot"></div>
-        <div class="city-label" style="right: 22px; top: -4px;">San José</div>
-      </div>
-
-      <!-- Fresno -->
-      <div class="city-marker" style="left: 227px; top: 417px;" data-city="fresno" onmouseenter="showPreview('fresno', event)" onmouseleave="hidePreview()">
-        <div class="city-dot denied"></div>
-        <div class="city-label" style="left: 22px; top: -4px;">Fresno</div>
-      </div>
-
-      <!-- Bakersfield -->
-      <div class="city-marker" style="left: 261px; top: 487px;" data-city="bakersfield" onmouseenter="showPreview('bakersfield', event)" onmouseleave="hidePreview()">
-        <div class="city-dot denied"></div>
-        <div class="city-label" style="left: 22px; top: -4px;">Bakersfield</div>
-      </div>
-
-      <!-- Los Angeles -->
-      <div class="city-marker" style="left: 296px; top: 555px;" data-city="los_angeles" onmouseenter="showPreview('los_angeles', event)" onmouseleave="hidePreview()">
-        <div class="city-dot denied"></div>
-        <div class="city-label" style="left: 22px; top: -4px;">Los Angeles</div>
-      </div>
-
-      <!-- Anaheim -->
-      <div class="city-marker" style="left: 310px; top: 567px;" data-city="anaheim" onmouseenter="showPreview('anaheim', event)" onmouseleave="hidePreview()">
-        <div class="city-dot denied"></div>
-        <div class="city-label" style="left: 22px; top: 6px;">Anaheim</div>
-      </div>
-
-      <!-- Long Beach -->
-      <div class="city-marker" style="left: 298px; top: 570px;" data-city="long_beach" onmouseenter="showPreview('long_beach', event)" onmouseleave="hidePreview()">
-        <div class="city-dot denied"></div>
-        <div class="city-label" style="right: 22px; top: -4px;">Long Beach</div>
-      </div>
-
-      <!-- San Diego -->
-      <div class="city-marker" style="left: 344px; top: 612px;" data-city="san_diego" onmouseenter="showPreview('san_diego', event)" onmouseleave="hidePreview()">
-        <div class="city-dot denied"></div>
-        <div class="city-label" style="left: 22px; top: -4px;">San Diego</div>
-      </div>
     </div>
 
     </div>
@@ -3398,44 +3429,14 @@ function setupTrendTooltips() {
 
 // ==================== MAP SCALING ====================
 function scaleMap() {
-  const container = document.querySelector('.map-container');
-  const map = document.querySelector('.california-map');
-  if (!container || !map) return;
-  
-  const availH = container.clientHeight;
-  const availW = container.clientWidth;
-  const mapH = 780;
-  const mapW = 500;
-  
-  const scaleH = availH / mapH;
-  const scaleW = availW / mapW;
-  const scale = Math.min(scaleH, scaleW, 1); // Never scale up beyond 1
-  
-  map.style.transform = `scale(${scale})`;
+  // Map now uses CSS aspect-ratio for responsive sizing
 }
 
 window.addEventListener('resize', scaleMap);
 
 // ==================== MAP VIEWPORT SCALING ====================
 function scaleMapToFit() {
-  const mapSection = document.querySelector('.map-section');
-  const mapContainer = document.querySelector('.map-container');
-  const caMap = document.querySelector('.california-map');
-  if (!mapSection || !mapContainer || !caMap) return;
-  
-  const sectionH = mapSection.clientHeight;
-  const headerH = mapSection.querySelector('.section-header')?.offsetHeight || 0;
-  const available = sectionH - headerH - 40; // 40px breathing room
-  const mapH = 780;
-  
-  if (available < mapH) {
-    const scale = available / mapH;
-    caMap.style.transform = `scale(${scale})`;
-    caMap.style.margin = `${-(mapH * (1 - scale)) / 2}px 0`;
-  } else {
-    caMap.style.transform = '';
-    caMap.style.margin = '';
-  }
+  // Map now uses CSS aspect-ratio for responsive sizing
 }
 
 window.addEventListener('resize', scaleMapToFit);
