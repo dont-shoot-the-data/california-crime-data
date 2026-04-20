@@ -4395,7 +4395,7 @@ const cityData = {
   },
   san_jose: {
     name: "San José",
-    period: "Jan 2020 – Jun 2025 (homicide/SA/robbery); Jan 2020 – Dec 2024 (kidnapping)",
+    period: "Jan 2020 – Jun 2025",
     duration: "5 years, 6 months of data",
     dataType: "Suspects",
     population: { Black: 3, Hispanic: 31, White: 27, Other: 38.5 },
@@ -4480,6 +4480,8 @@ const cityData = {
       },
       kidnapping: {
         label: "Kidnapping",
+        period: "Jan 2020 – Dec 2024",
+        duration: "5 years",
         total: 367,
         byRace: { Black: 73, Hispanic: 213, White: 50, Other: 31 },
         pcts: { Black: 19.9, Hispanic: 58, White: 13.6, Other: 8.4 },
@@ -5291,8 +5293,8 @@ function renderCityDetail(cityId) {
                 ${crime.total ? crime.total.toLocaleString() : '—'} <span style="color:var(--text-muted); font-weight:400;">total ${city.dataType.toLowerCase()}</span>
               </div>
               <div style="margin-top:10px; display:inline-flex; align-items:flex-start; gap:14px; flex-wrap:wrap; justify-content:center;">
-                <div class="city-date-value" data-card-date="${cardKey}" style="font-size:13px; letter-spacing:1px;">${city.period}</div>
-                <div class="city-date-duration" data-card-dur="${cardKey}" style="font-size:11px; margin-top:0;">${city.duration.replace(' of data','')}</div>
+                <div class="city-date-value" data-card-date="${cardKey}" style="font-size:13px; letter-spacing:1px;">${crime.period || city.period}</div>
+                <div class="city-date-duration" data-card-dur="${cardKey}" style="font-size:11px; margin-top:0;">${(crime.duration || city.duration).replace(' of data','')}</div>
               </div>
             </div>
             ${clearanceNote}
@@ -5675,8 +5677,8 @@ function renderCrimeDetail(crimeKey) {
                 ${crime.total ? crime.total.toLocaleString() : '—'} <span style="color:var(--text-muted); font-weight:400;">total ${city.dataType.toLowerCase()}</span>
               </div>
               <div style="margin-top:10px; display:inline-flex; align-items:flex-start; gap:14px; flex-wrap:wrap; justify-content:center;">
-                <div class="city-date-value" data-card-date="${cardKey}" style="font-size:13px; letter-spacing:1px;">${city.period}</div>
-                <div class="city-date-duration" data-card-dur="${cardKey}" style="font-size:11px; margin-top:0;">${city.duration.replace(' of data','')}</div>
+                <div class="city-date-value" data-card-date="${cardKey}" style="font-size:13px; letter-spacing:1px;">${crime.period || city.period}</div>
+                <div class="city-date-duration" data-card-dur="${cardKey}" style="font-size:11px; margin-top:0;">${(crime.duration || city.duration).replace(' of data','')}</div>
               </div>
             </div>
             ${clearanceNote}
