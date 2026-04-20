@@ -203,9 +203,25 @@ section[id] { scroll-margin-top: 70px; }
 
 .nav-links a:hover { color: var(--text-primary); }
 
-@media (max-width: 600px) {
-  .nav-links { gap: 14px; }
-  .nav-links a { font-size: 10px; }
+@media (max-width: 720px) {
+  .nav {
+    flex-direction: column;
+    padding: 10px 14px;
+    gap: 8px;
+  }
+  .nav-logo {
+    font-size: 13px;
+    white-space: nowrap;
+    letter-spacing: 0.3px;
+  }
+  .nav-links {
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+    row-gap: 6px;
+  }
+  .nav-links a { font-size: 10px; letter-spacing: 0.8px; }
 }
 
 /* ============ HERO ============ */
@@ -1486,14 +1502,14 @@ section[id] { scroll-margin-top: 70px; }
   font-weight: 700;
   color: #fff;
   letter-spacing: 1.5px;
-  border-right: 2px solid var(--accent-red);
   padding-right: 4px;
   overflow: hidden;
   white-space: nowrap;
-  max-width: 0;
+  max-width: 500px;
 }
 
 .city-date-value.typing {
+  border-right: 2px solid var(--accent-red);
   animation: typewriterReveal 1.5s steps(25) forwards, typewriterBlink 0.7s step-end infinite;
 }
 
@@ -1513,16 +1529,16 @@ section[id] { scroll-margin-top: 70px; }
   font-weight: 600;
   color: var(--accent-red);
   letter-spacing: 1.2px;
-  border-right: 2px solid var(--accent-red);
   padding-right: 4px;
   overflow: hidden;
   white-space: nowrap;
-  max-width: 0;
+  max-width: 500px;
   margin-top: 6px;
   opacity: 0.85;
 }
 
 .city-date-duration.typing {
+  border-right: 2px solid var(--accent-red);
   animation: typewriterReveal 1.2s steps(20) forwards, typewriterBlink 0.7s step-end infinite;
 }
 
@@ -4947,12 +4963,9 @@ previewCard.addEventListener('mouseleave', () => {
 });
 previewCard.addEventListener('click', () => {
   const cityId = previewCard.dataset.cityId;
-  if (cityId && cityData[cityId]) {
+  if (cityId) {
     switchCity(cityId);
     document.getElementById('cities').scrollIntoView({ behavior: 'smooth' });
-    hidePreview();
-  } else if (cityId) {
-    document.getElementById('transparency').scrollIntoView({ behavior: 'smooth' });
     hidePreview();
   }
 });
@@ -4961,11 +4974,9 @@ previewCard.addEventListener('click', () => {
 document.querySelectorAll('.city-marker').forEach(marker => {
   marker.addEventListener('click', () => {
     const cityId = marker.dataset.city;
-    if (cityData[cityId]) {
+    if (cityId) {
       switchCity(cityId);
       document.getElementById('cities').scrollIntoView({ behavior: 'smooth' });
-    } else {
-      document.getElementById('transparency').scrollIntoView({ behavior: 'smooth' });
     }
   });
 });
