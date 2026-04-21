@@ -286,6 +286,7 @@ section[id] { scroll-margin-top: 70px; }
   font-weight: 600;
   letter-spacing: 5px;
   text-transform: uppercase;
+  text-align: center;
   color: var(--accent-red);
   border: 2px solid rgba(230,57,70,0.6);
   padding: 12px 28px;
@@ -623,6 +624,60 @@ section[id] { scroll-margin-top: 70px; }
   width: 100%;
   overflow: hidden;
 }
+
+/* ============ CALIFORNIA MAP GROWTH ANIMATION ============ */
+/* When the map-container has .ca-animated, the map grows and markers drop in sequentially */
+.ca-animated .california-map {
+  transform: scale(0.25);
+  opacity: 0;
+  transform-origin: center center;
+  transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s ease-out;
+}
+.ca-animated .california-map svg {
+  /* Kill the outer drop-shadow during the grow-in so it doesn't pop awkwardly */
+  filter: drop-shadow(0 0 0 rgba(230,57,70,0));
+  transition: filter 0.6s ease 0.9s;
+}
+.ca-animated .ca-outline {
+  stroke-dasharray: 4000;
+  stroke-dashoffset: 4000;
+}
+.ca-animated .city-marker {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center center;
+  transform: scale(0);
+  transition: opacity 0.4s ease-out, transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Activated state — grown and markers landed */
+.ca-animated.ca-grown .california-map {
+  transform: scale(1);
+  opacity: 1;
+}
+.ca-animated.ca-grown .california-map svg {
+  filter: drop-shadow(0 0 40px rgba(230,57,70,0.08));
+}
+.ca-animated.ca-grown .ca-outline {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+}
+.ca-animated.ca-grown .city-marker {
+  opacity: 1;
+  transform: scale(1);
+}
+/* Stagger markers so they land one-by-one after the map has mostly grown */
+.ca-animated .city-marker:nth-of-type(1)  { transition-delay: 0ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(1)  { transition-delay: 800ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(2)  { transition-delay: 920ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(3)  { transition-delay: 1040ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(4)  { transition-delay: 1160ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(5)  { transition-delay: 1280ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(6)  { transition-delay: 1400ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(7)  { transition-delay: 1520ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(8)  { transition-delay: 1640ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(9)  { transition-delay: 1760ms; }
+.ca-animated.ca-grown .city-marker:nth-of-type(10) { transition-delay: 1880ms; }
 
 .california-map {
   position: relative;
@@ -1072,7 +1127,7 @@ section[id] { scroll-margin-top: 70px; }
   align-items: center;
   gap: 10px 18px;
   justify-content: center;
-  margin: 6px 0 10px;
+  margin: 18px 0 10px;
   padding: 11px 16px 11px 22px;
   background: linear-gradient(90deg, rgba(230,57,70,0.14) 0%, rgba(230,57,70,0.06) 100%);
   border: 1px solid rgba(230,57,70,0.55);
@@ -1353,6 +1408,265 @@ section[id] { scroll-margin-top: 70px; }
   .vc-group-pill { min-height: 48px; padding: 8px 4px 6px; }
   .vc-group-pill-num { font-size: 20px; }
   .vc-group-pill-label { font-size: 7px; letter-spacing: 0.8px; margin-top: 3px; }
+}
+
+/* ============ FLAT 16-BAR INTERRACIAL CHART ============ */
+.vc-chart-flat {
+  margin-top: 18px;
+  padding: 6px 2px 0;
+}
+.vc-flat-track {
+  display: flex;
+  gap: 3px;
+  height: 240px;
+  align-items: flex-end;
+  padding-top: 22px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.vc-flat-col {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+.vc-flat-bar {
+  width: 100%;
+  max-width: 48px;
+  height: 0%;
+  border-radius: 2px 2px 0 0;
+  transition: height 1s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 -2px 0 rgba(0,0,0,0.2);
+  position: relative;
+  cursor: pointer;
+}
+.vc-flat-bar:hover { filter: brightness(1.25); }
+.vc-flat-val {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Source Code Pro', monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  line-height: 1;
+  pointer-events: none;
+}
+.vc-flat-labels {
+  display: flex;
+  gap: 3px;
+  height: 78px;
+  padding: 0 2px;
+  margin-top: 2px;
+}
+.vc-flat-label-cell {
+  flex: 1 1 0;
+  min-width: 0;
+  position: relative;
+}
+.vc-flat-label {
+  position: absolute;
+  top: 4px;
+  right: 50%;
+  transform-origin: right top;
+  transform: rotate(-60deg);
+  font-family: 'Source Code Pro', monospace;
+  font-size: 8.5px;
+  font-weight: 700;
+  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: 0.2px;
+}
+.vc-flat-label .vc-flat-on {
+  color: var(--text-muted);
+  font-weight: 500;
+  opacity: 0.8;
+  margin: 0 3px;
+}
+.vc-flat-brackets {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  gap: 3px;
+  margin-top: 16px;
+  padding: 0 2px;
+}
+.vc-flat-bracket {
+  grid-column: span 4;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0 0;
+  position: relative;
+}
+.vc-flat-bracket::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  border: 1.5px solid currentColor;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  opacity: 0.5;
+}
+.vc-flat-bracket-info {
+  margin-top: 12px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+  line-height: 1.3;
+}
+.vc-flat-bracket-num {
+  display: block;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 2px;
+}
+.vc-flat-disparity {
+  margin-top: 22px;
+  padding: 16px 14px 14px;
+  border-top: 1px dashed var(--border);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 18px;
+  font-family: 'Source Code Pro', monospace;
+}
+.vc-flat-disp-title {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.vc-flat-disp-side {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+}
+.vc-flat-disp-side.vc-flat-disp-major {
+  background: linear-gradient(180deg, rgba(230,57,70,0.14) 0%, rgba(230,57,70,0.04) 100%);
+  border-color: rgba(230,57,70,0.45);
+  box-shadow: 0 0 12px rgba(230,57,70,0.08);
+}
+.vc-flat-disp-count {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.8px;
+  line-height: 1;
+  color: var(--text-primary);
+}
+.vc-flat-disp-major .vc-flat-disp-count { color: var(--accent-red); text-shadow: 0 0 10px rgba(230,57,70,0.4); }
+.vc-flat-disp-pair {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.vc-flat-disp-on {
+  color: var(--text-muted);
+  margin: 0 4px;
+  font-weight: 500;
+  opacity: 0.75;
+  text-transform: lowercase;
+  letter-spacing: 0;
+}
+.vc-flat-disp-ratio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 4px;
+}
+.vc-flat-disp-ratio-num {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent-gold);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  text-shadow: 0 0 10px rgba(212,136,14,0.35);
+}
+.vc-flat-disp-ratio-label {
+  font-size: 8.5px;
+  color: var(--text-muted);
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 70px;
+}
+@media (max-width: 540px) {
+  .vc-flat-disparity {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .vc-flat-disp-ratio { order: 3; flex-direction: row; gap: 8px; }
+  .vc-flat-disp-ratio-label { max-width: none; }
+  .vc-flat-disp-count { font-size: 18px; }
+  .vc-flat-disp-ratio-num { font-size: 16px; }
+}
+
+.vc-flat-foot {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px dashed var(--border);
+  font-family: 'Source Code Pro', monospace;
+  font-size: 10.5px;
+}
+.vc-flat-foot-title {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.vc-flat-foot-line {
+  color: var(--text-primary);
+  line-height: 1.85;
+  letter-spacing: 0.3px;
+}
+.vc-flat-foot-line strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+@media (max-width: 540px) {
+  .vc-chart-flat { padding: 6px 0 0; }
+  .vc-flat-track { height: 180px; padding-top: 20px; gap: 2px; }
+  .vc-flat-bar { max-width: 28px; }
+  .vc-flat-val { font-size: 8px; top: -13px; }
+  .vc-flat-label { font-size: 7.5px; letter-spacing: 0; }
+  .vc-flat-labels { gap: 2px; height: 68px; padding: 0 1px; margin-top: 0; }
+  .vc-flat-brackets { gap: 2px; padding: 0 1px; margin-top: 12px; }
+  .vc-flat-bracket-info { font-size: 8px; letter-spacing: 0.3px; }
+  .vc-flat-bracket-num { font-size: 11px; }
+  .vc-flat-bracket { padding: 8px 0 0; }
+  .vc-flat-foot { grid-template-columns: 1fr; font-size: 9.5px; gap: 12px; }
 }
 
 .crime-card {
@@ -1901,9 +2215,12 @@ section[id] { scroll-margin-top: 70px; }
 /* Line charts */
 .trend-charts {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 24px;
   margin-top: 40px;
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 @media (max-width: 800px) {
@@ -1932,12 +2249,14 @@ section[id] { scroll-margin-top: 70px; }
   text-transform: uppercase;
   color: var(--accent-red);
   margin-bottom: 6px;
+  text-align: center;
 }
 
 .trend-chart-subtitle {
   font-size: 11px;
   color: var(--text-muted);
   margin-bottom: 16px;
+  text-align: center;
 }
 
 .trend-svg {
@@ -2020,10 +2339,10 @@ section[id] { scroll-margin-top: 70px; }
 
 .comparison-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: 20px;
   margin-top: 30px;
-  max-width: 900px;
+  max-width: 640px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -2797,15 +3116,15 @@ section[id] { scroll-margin-top: 70px; }
 .obj-chart-sub a { color: var(--accent-red); }
 .obj-chart-wrap {
   position: relative;
-  height: 280px;
+  height: 240px;
 }
 .obj-chart-wrap-tall {
   position: relative;
-  height: 360px;
+  height: 280px;
 }
 .obj-chart-wrap-short {
   position: relative;
-  height: 220px;
+  height: 200px;
 }
 
 /* Toggle buttons for charts */
@@ -3410,7 +3729,7 @@ section[id] { scroll-margin-top: 70px; }
     <div class="fog-layer"></div>
     <div class="fog-layer"></div>
   </div>
-  <div class="hero-badge">Public Records Request Investigation</div>
+  <div class="hero-badge">A Public Records Request Investigation</div>
   <h1 class="hero-title">California
     <span class="hero-race-wrap">
       <span class="hero-race">RACE</span>
@@ -3450,7 +3769,7 @@ section[id] { scroll-margin-top: 70px; }
     <div class="section-desc" style="margin-top:4px;font-size:14px;">Hover over a city to preview its data.</div>
   </div>
 
-  <div class="map-container reveal scale-in">
+  <div class="map-container ca-animated" id="caMapContainer">
     <div class="california-map">
       <!-- Real California outline from US Census GeoJSON data -->
       <svg viewBox="0 120 500 540" xmlns="http://www.w3.org/2000/svg" overflow="visible">
@@ -3548,11 +3867,6 @@ section[id] { scroll-margin-top: 70px; }
     <div class="section-desc">Click any card for the full breakdown. Source data links included for every dataset.</div>
   </div>
 
-  <div class="view-toggle reveal" style="display:flex;justify-content:center;gap:0;margin-bottom:18px;">
-    <button class="view-toggle-btn active" data-view="city" onclick="switchView('city')">By City</button>
-    <button class="view-toggle-btn" data-view="crime" onclick="switchView('crime')">By Crime</button>
-  </div>
-
   <div class="city-tabs reveal" id="cityTabs" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:700px;margin:0 auto 18px;">
     <button class="city-tab active" data-city="sacramento" onclick="switchCity('sacramento')">Sacramento</button>
     <button class="city-tab" data-city="san_jose" onclick="switchCity('san_jose')">San José</button>
@@ -3564,13 +3878,6 @@ section[id] { scroll-margin-top: 70px; }
     <button class="city-tab" data-city="long_beach" onclick="switchCity('long_beach')" style="color:var(--text-muted);opacity:0.5;">Long Beach</button>
     <button class="city-tab" data-city="bakersfield" onclick="switchCity('bakersfield')" style="color:var(--accent-gold);opacity:0.7;">Bakersfield</button>
     <button class="city-tab" data-city="anaheim" onclick="switchCity('anaheim')" style="color:var(--accent-gold);opacity:0.7;">Anaheim</button>
-  </div>
-
-  <div class="city-tabs reveal" id="crimeTabs" style="display:none;">
-    <button class="city-tab active" data-crime="homicide" onclick="switchCrime('homicide')">Homicide</button>
-    <button class="city-tab" data-crime="sexual_assault" onclick="switchCrime('sexual_assault')">Sexual Assault</button>
-    <button class="city-tab" data-crime="robbery" onclick="switchCrime('robbery')">Robbery</button>
-    <button class="city-tab" data-crime="kidnapping" onclick="switchCrime('kidnapping')">Kidnapping</button>
   </div>
 
   <div id="cityDetailContent" class="reveal"></div>
@@ -3595,9 +3902,11 @@ section[id] { scroll-margin-top: 70px; }
       <div style="display:flex; justify-content:center; margin-bottom:8px;">
         <div class="city-date-duration" id="statewideDurationTypewriter" style="font-size:12px;">24 years of data</div>
       </div>
-      <div class="statewide-toggle" style="display: flex; justify-content: center; gap: 0; margin-top: 16px;">
-        <button class="state-toggle-btn active" data-mode="rate" onclick="switchStatewideView('rate')">Rate</button>
-        <button class="state-toggle-btn" data-mode="counts" onclick="switchStatewideView('counts')">Counts</button>
+      <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin-top:16px;">
+        <button class="state-toggle-btn state-crime-btn active" data-crime="homicide"   onclick="switchStatewideCrime('homicide')">Homicide</button>
+        <button class="state-toggle-btn state-crime-btn"        data-crime="rape"       onclick="switchStatewideCrime('rape')">Rape</button>
+        <button class="state-toggle-btn state-crime-btn"        data-crime="robbery"    onclick="switchStatewideCrime('robbery')">Robbery</button>
+        <button class="state-toggle-btn state-crime-btn"        data-crime="kidnapping" onclick="switchStatewideCrime('kidnapping')">Kidnapping</button>
       </div>
     </div>
 
@@ -3620,6 +3929,12 @@ section[id] { scroll-margin-top: 70px; }
           <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--other);">Other 17%</span>
           <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--black);">Black 6%</span>
         </div>
+      </div>
+      <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin:0 auto 16px;">
+        <button class="state-toggle-btn state-crime-btn active" data-crime-local="homicide"   onclick="switchStatewideCrime('homicide')">Homicide</button>
+        <button class="state-toggle-btn state-crime-btn"        data-crime-local="rape"       onclick="switchStatewideCrime('rape')">Rape</button>
+        <button class="state-toggle-btn state-crime-btn"        data-crime-local="robbery"    onclick="switchStatewideCrime('robbery')">Robbery</button>
+        <button class="state-toggle-btn state-crime-btn"        data-crime-local="kidnapping" onclick="switchStatewideCrime('kidnapping')">Kidnapping</button>
       </div>
       <div class="comparison-grid" id="comparisonGrid"></div>
     </div>
@@ -3699,7 +4014,9 @@ section[id] { scroll-margin-top: 70px; }
         </table>
       </div>
 
-      <p style="font-size:11px;color:var(--text-muted);font-family:'Source Code Pro',monospace;margin-top:-6px;">Source: <a href="https://data-openjustice.doj.ca.gov/sites/default/files/2025-07/Crime%20In%20CA%202024%20final.pdf" target="_blank">CA DOJ, &ldquo;Crime in California 2024,&rdquo; Table 31</a>. Complete source list in Objection 2.</p>
+      <div style="text-align:center;margin:6px 0 14px;">
+        <button class="obj-sources-btn" onclick="openCASourcesModal()">&#128269; Verify Any Year &middot; 25 CA AG Reports</button>
+      </div>
 
       <div class="obj-highlight">
         <strong>Black arrests stay within a 3-point band for five straight years.</strong> FBI national data 2015&ndash;2019 shows the same pattern: Black offenders were 53&ndash;56% of known-race murder offenders every year. The stability is the signal.
@@ -3714,13 +4031,11 @@ section[id] { scroll-margin-top: 70px; }
       <span class="obj-banner-arrow">&#9660;</span>
     </div>
     <div class="obj-content" style="display:none;">
-      <p>The claim: arrest disparities are produced <em>by</em> biased policing, not <em>measuring</em> actual offending. The test: find a department that isn&rsquo;t overwhelmingly white and run the numbers.</p>
-
-      <p>The NYPD is <strong>60.8% people of color</strong>. Hispanic officers alone outnumber White officers.</p>
+      <p>The NYPD is <strong>60.8% people of color</strong> &mdash; Hispanic, Black, and Asian officers combined outnumber White officers on the force.</p>
 
       <div class="obj-nypd-card">
         <div class="obj-nypd-headline">60.8%</div>
-        <div class="obj-nypd-sub">of all NYPD officers are <strong>people of color</strong>. Hispanic officers alone (32.6%) outnumber white officers (39.2%).</div>
+        <div class="obj-nypd-sub">of all NYPD officers are <strong>people of color</strong>.</div>
         <div style="height:260px;position:relative;margin-top:18px"><canvas id="chartNYPDOfficers"></canvas></div>
         <div class="obj-nypd-chips">
           <div class="obj-nypd-chip"><span class="obj-nypd-chip-dot" style="background:#4ea8de"></span><div><div class="obj-nypd-chip-pct">39.2%</div><div class="obj-nypd-chip-lbl">White</div></div></div>
@@ -3734,27 +4049,18 @@ section[id] { scroll-margin-top: 70px; }
       <p>Same department. Majority officers of color. Same arrest distribution four crimes in a row:</p>
 
       <div class="obj-chart-card">
-        <div class="obj-chart-title">NYC Murder Arrestees, 2008&ndash;2024</div>
-        <div class="obj-chart-sub">Source: <a href="https://www.nyc.gov/site/nypd/stats/reports-analysis/crime-enf.page" target="_blank">NYPD Enforcement Report</a>. 17 years of arrestee demographics.</div>
-        <div class="obj-chart-wrap"><canvas id="chartNYCMurder"></canvas></div>
-      </div>
-
-      <div class="obj-chart-card">
-        <div class="obj-chart-title">NYC Rape Arrestees, 2008&ndash;2024</div>
-        <div class="obj-chart-sub">Source: <a href="https://www.nyc.gov/site/nypd/stats/reports-analysis/crime-enf.page" target="_blank">NYPD Enforcement Report</a>.</div>
-        <div class="obj-chart-wrap"><canvas id="chartNYCRape"></canvas></div>
-      </div>
-
-      <div class="obj-chart-card">
-        <div class="obj-chart-title">NYC Robbery Arrestees, 2008&ndash;2024</div>
-        <div class="obj-chart-sub">Source: <a href="https://www.nyc.gov/site/nypd/stats/reports-analysis/crime-enf.page" target="_blank">NYPD Enforcement Report</a>.</div>
-        <div class="obj-chart-wrap"><canvas id="chartNYCRobbery"></canvas></div>
-      </div>
-
-      <div class="obj-chart-card">
-        <div class="obj-chart-title">NYC Kidnapping Arrestees, 2008&ndash;2024</div>
-        <div class="obj-chart-sub">Source: <a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic-/8h9b-rp9u" target="_blank">NYPD Arrests Data (Historic)</a>, NYC Open Data.</div>
-        <div class="obj-chart-wrap"><canvas id="chartNYCKidnapping"></canvas></div>
+        <div class="obj-chart-title" id="nycChartTitle">NYC Murder Arrestees, 2008&ndash;2024</div>
+        <div class="obj-chart-sub" id="nycChartSub">17 years of NYPD arrestee demographics.</div>
+        <div class="obj-toggle-row">
+          <button onclick="toggleNYCCrime('murder')"     id="btn-nyc-murder"     class="obj-toggle obj-toggle-active">Murder</button>
+          <button onclick="toggleNYCCrime('rape')"       id="btn-nyc-rape"       class="obj-toggle">Rape</button>
+          <button onclick="toggleNYCCrime('robbery')"    id="btn-nyc-robbery"    class="obj-toggle">Robbery</button>
+          <button onclick="toggleNYCCrime('kidnapping')" id="btn-nyc-kidnapping" class="obj-toggle">Kidnapping</button>
+        </div>
+        <div class="obj-chart-wrap"><canvas id="chartNYCCombined"></canvas></div>
+        <div style="text-align:center;margin-top:12px;">
+          <button class="obj-sources-btn" id="nycSourceBtn" onclick="openNYCSourcesModal()">&#128269; Verify Any Year &middot; 17 NYPD Reports</button>
+        </div>
       </div>
 
       <h4>California Ran the Political-Leadership Version</h4>
@@ -3782,9 +4088,8 @@ section[id] { scroll-margin-top: 70px; }
         <div class="obj-chart-title">California Felony Homicide Arrests by Race, 2000&ndash;2024</div>
         <div class="obj-chart-sub">Source: CA AG, &ldquo;Crime in California&rdquo; Table 31, 2000&ndash;2024. 2001 excluded (duplicate).</div>
         <div class="obj-toggle-row">
-          <button onclick="toggleCAChart('counts')" id="btn-ca-counts" class="obj-toggle obj-toggle-active">Counts</button>
-          <button onclick="toggleCAChart('pct')" id="btn-ca-pct" class="obj-toggle">% of Arrests</button>
-          <button onclick="toggleCAChart('rate')" id="btn-ca-rate" class="obj-toggle">Rate (&divide; Pop)</button>
+          <button onclick="toggleCAChart('rate')" id="btn-ca-rate" class="obj-toggle obj-toggle-active">Rate (&divide; Pop)</button>
+          <button onclick="toggleCAChart('counts')" id="btn-ca-counts" class="obj-toggle">Counts</button>
         </div>
         <div id="caChartSubNote" style="font-size:11px;color:var(--text-muted);font-family:'Source Code Pro',monospace;margin:0 0 10px;display:none;line-height:1.5"></div>
         <div class="obj-chart-wrap-tall"><canvas id="chartCAHomicide"></canvas></div>
@@ -3806,6 +4111,8 @@ section[id] { scroll-margin-top: 70px; }
     </div>
     <div class="obj-content" style="display:none;">
       <p><strong>No.</strong> Of the exonerations, half are Black. That does not mean half of the homicides Black Americans commit end up exonerated &mdash; it means that the exonerations themselves (which total only about 35 per year nationwide) are split roughly down the middle, with about <strong>19 Black exonerations per year</strong> and about 11 White, per the <a href="https://exonerationregistry.org" target="_blank">National Registry of Exonerations</a>.</p>
+
+      <p>Which makes sense. According to <a href="https://ucr.fbi.gov/crime-in-the-u.s/2019/crime-in-the-u.s.-2019/tables/expanded-homicide-data-table-3.xls" target="_blank">FBI data</a>, Black Americans are the identified offender in roughly <strong>55% of known-race homicides nationally</strong>. So 55% of murder exonerations being Black matches the offending base almost exactly &mdash; not a sign of systemic wrongful conviction, but a sign that exonerations scale with convictions, which scale with offending.</p>
 
       <p>The statistic is about the tiny population of overturned convictions, not about the much larger population of committed homicides. The reason the exonerations are about half Black is the same reason the convictions are about half Black: Black Americans are the identified offender in roughly half of known-race homicides nationally.</p>
 
@@ -3948,6 +4255,97 @@ section[id] { scroll-margin-top: 70px; }
         &ldquo;One in five Black men born to a low-income family is incarcerated on a given day. You don&rsquo;t see anything like that for both Black and White women.&rdquo;
         <span class="obj-quote-cite">&mdash; Raj Chetty, Harvard</span>
       </div>
+
+      <h4>Street-Level Test &middot; The Five-City TikTok</h4>
+
+      <p>The claim surfaces constantly on social media. One <a href="https://www.tiktok.com/t/ZP8gY3AtF/" target="_blank">viral TikTok from @blakewhat</a> puts it cleanly: poverty causes crime, not race, and here are the five Blackest cities in America to prove it. The video is a good test case because it makes the argument in its strongest form. Four of the five cities fit. The fifth didn&rsquo;t &mdash; and that&rsquo;s where the argument broke.</p>
+
+      <div class="obj-table-wrap">
+        <table class="obj-table">
+          <thead><tr>
+            <th style="text-align:left;padding-left:20px">City</th>
+            <th>Black %</th>
+            <th>Poverty</th>
+            <th>Homicide</th>
+            <th class="obj-hl">Fits?</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="obj-td-left">Detroit, MI</td><td>76.6%</td><td>32.7%</td><td><strong>~31/100k</strong></td><td class="obj-hl" style="color:#4ade80"><strong>&#10003; yes</strong></td></tr>
+            <tr><td class="obj-td-left">Jackson, MS</td><td>81.8%</td><td>25.0%</td><td><strong>~55/100k</strong></td><td class="obj-hl" style="color:#4ade80"><strong>&#10003; yes</strong></td></tr>
+            <tr><td class="obj-td-left">Lauderhill, FL</td><td>79.9%</td><td>19.4%</td><td>~17&ndash;25/100k</td><td class="obj-hl" style="color:#4ade80"><strong>&#10003; yes</strong></td></tr>
+            <tr><td class="obj-td-left">East Orange, NJ</td><td>80.0%</td><td>17.6%</td><td>~10&ndash;17/100k</td><td class="obj-hl" style="color:#4ade80"><strong>&#10003; yes</strong></td></tr>
+            <tr style="background:rgba(230,57,70,0.08)"><td class="obj-td-left" style="color:var(--accent-red)"><strong>South Fulton, GA</strong></td><td><strong>~91%</strong></td><td><strong>9.1%</strong><br><span style="font-size:10px;color:var(--text-muted)">below national avg</span></td><td style="color:var(--accent-red)"><strong>~20/100k</strong><br><span style="font-size:10px;color:var(--text-muted)">3&ndash;4&times; national avg</span></td><td class="obj-hl" style="color:var(--accent-red)"><strong>&#10007; no</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:10px;color:var(--text-muted);font-family:'Source Code Pro',monospace;margin-top:-4px;text-align:center">Sources: <a href="https://www.washingtoninformer.com/americas-10-blackest-cities-revealed-in-new-report/" target="_blank">Washington Informer 2025 ranking</a>, U.S. Census poverty estimates, FBI UCR homicide data. National homicide rate: ~6/100k. National poverty rate: ~11%.</p>
+
+      <div class="obj-highlight">
+        <strong>South Fulton is the counterexample inside his own list.</strong> ~91% Black, poverty below the national average, homicide still 3&ndash;4&times; the national average. Poverty didn&rsquo;t predict it. The TikTok handles this by claiming South Fulton&rsquo;s homicide rate is also below average &mdash; that&rsquo;s the only factual lie in the video, and the only place the rule broke.
+      </div>
+
+      <h4>Brookings vs. Wharton &middot; Why the Unit of Analysis Decides</h4>
+
+      <p>Two peer-reviewed studies ask the deeper version of the question and reach opposite conclusions. The difference is scale.</p>
+
+      <div class="obj-multi-card">
+        <div class="obj-multi-header">
+          <div class="obj-multi-header-title">Same Question, Different Units</div>
+          <div class="obj-multi-header-sub">Does the race effect survive poverty controls?</div>
+        </div>
+        <div class="obj-multi-colheader" style="display:grid;grid-template-columns: 1.6fr 0.8fr 0.9fr 0.8fr;">
+          <div>Study</div>
+          <div>Unit</div>
+          <div>Sample</div>
+          <div>Finding</div>
+        </div>
+        <div class="obj-multi-row" style="grid-template-columns: 1.6fr 0.8fr 0.9fr 0.8fr;">
+          <div>
+            <div class="obj-multi-name"><a href="https://www.brookings.edu/articles/rethinking-the-role-of-race-in-crime-and-police-violence/" target="_blank" style="color:inherit">Brookings / Henderson</a></div>
+            <div class="obj-multi-desc">June 2024 &middot; Coarse grain &middot; Averages rich/poor, Black/white into one city number</div>
+          </div>
+          <div class="obj-multi-pop">City</div>
+          <div class="obj-multi-share">100 cities</div>
+          <div class="obj-multi-mult" style="font-size:13px;">Race effect<br>vanishes</div>
+        </div>
+        <div class="obj-multi-row" style="grid-template-columns: 1.6fr 0.8fr 0.9fr 0.8fr;">
+          <div>
+            <div class="obj-multi-name"><a href="https://jamanetwork.com/journals/jamanetworkopen/fullarticle/2773288" target="_blank" style="color:inherit">Wharton / JAMA</a></div>
+            <div class="obj-multi-desc">Nov 2020 &middot; Fine grain &middot; Measures where people actually live and homicides actually happen</div>
+          </div>
+          <div class="obj-multi-pop">Census tract</div>
+          <div class="obj-multi-share">~15,000</div>
+          <div class="obj-multi-mult">4&times; gap<br>persists</div>
+        </div>
+      </div>
+
+      <div class="obj-chart-card">
+        <div class="obj-chart-title">Wharton &middot; Same Poverty Level, Different Racial Composition</div>
+        <div class="obj-chart-sub">Gun homicide rate in middle-class U.S. census tracts, mostly-white vs. mostly-Black. Both tract sets matched on poverty and income.</div>
+        <div style="max-width:520px;margin:20px auto 8px;padding:0 16px;">
+          <div style="display:grid;grid-template-columns:140px 1fr 50px;gap:10px;align-items:center;margin-bottom:12px;">
+            <div style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--white);text-align:right;">Mostly-white tracts</div>
+            <div style="position:relative;height:28px;background:rgba(255,255,255,0.03);border-radius:3px;">
+              <div style="position:absolute;left:0;top:0;bottom:0;width:20%;background:var(--white);border-radius:3px;display:flex;align-items:center;padding:0 10px;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--bg-card);">1&times;</div>
+            </div>
+            <div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:140px 1fr 50px;gap:10px;align-items:center;margin-bottom:8px;">
+            <div style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--black);text-align:right;">Mostly-Black tracts</div>
+            <div style="position:relative;height:28px;background:rgba(255,255,255,0.03);border-radius:3px;">
+              <div style="position:absolute;left:0;top:0;bottom:0;width:80%;background:var(--black);border-radius:3px;display:flex;align-items:center;padding:0 10px;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#fff;">4&times;</div>
+            </div>
+            <div style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--accent-red);">baseline</div>
+          </div>
+          <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.5px;margin-top:16px;padding-top:10px;border-top:1px solid var(--border);">
+            Cheon, Lin, Harding, Wang, Small &middot; JAMA Network Open, 2020
+          </div>
+        </div>
+      </div>
+
+      <div class="obj-highlight">
+        When two studies disagree and one uses a finer unit of analysis, the finer one wins. Cities average wealthy and poor, white and Black neighborhoods into a single number. Census tracts are where people actually live and homicides actually happen. <strong>Wharton measured at the scale where the phenomenon occurs. Brookings didn&rsquo;t.</strong> Brookings had nearly four years after Wharton was published to address the contradiction. It didn&rsquo;t cite Wharton anywhere.
+      </div>
     </div>
     <!-- /OBJECTION 5 -->
 
@@ -3958,9 +4356,10 @@ section[id] { scroll-margin-top: 70px; }
       <span class="obj-banner-arrow">&#9660;</span>
     </div>
     <div class="obj-content" style="display:none;">
-      <p>Falsifiable claim. If American slavery and legal discrimination are the cause, then (a) groups with <em>more severe</em> legal discrimination should show <em>higher</em> rates, and (b) populations with no U.S. slavery history should show different patterns, and (c) the state with the deepest slavery connection should show the highest disparity.</p>
-
-      <p>None of these predictions hold.</p>
+      <div class="obj-pattern-banner" style="margin:0 0 20px;">
+        <div class="obj-pattern-banner-label">California Never Had Slavery</div>
+        <div class="obj-pattern-banner-text">California entered the Union as a <strong>free state in 1850</strong>. No plantations. No state-level Black Codes. No Jim Crow statutes. Yet California&rsquo;s 25-year homicide arrest data shows the <strong>same 4.4&times; disparity</strong> as jurisdictions with centuries of slavery behind them. The disparity does not track with slavery history.</div>
+      </div>
 
       <h4>Chinese Exclusion &middot; The Counter-Test</h4>
 
@@ -3972,17 +4371,15 @@ section[id] { scroll-margin-top: 70px; }
             <th style="text-align:left;padding-left:20px">Right in California</th><th>Black</th><th>Chinese</th>
           </tr></thead>
           <tbody>
-            <tr><td class="obj-td-left">Right to vote</td><td style="color:#4ade80"><strong>&#10003; 1870</strong></td><td style="color:var(--accent-red)"><strong>&#10007; Until 1943</strong></td></tr>
-            <tr><td class="obj-td-left">U.S. citizenship</td><td style="color:#4ade80"><strong>&#10003; 1868</strong></td><td style="color:var(--accent-red)"><strong>&#10007; Until 1943</strong></td></tr>
-            <tr><td class="obj-td-left">Own land</td><td style="color:#4ade80"><strong>&#10003;</strong></td><td style="color:var(--accent-red)"><strong>&#10007; 1913&ndash;1956</strong></td></tr>
-            <tr><td class="obj-td-left">Testify in court</td><td style="color:#4ade80"><strong>&#10003; 1863</strong></td><td style="color:var(--accent-red)"><strong>&#10007; 1854&ndash;1873</strong></td></tr>
-            <tr><td class="obj-td-left">Immigrate</td><td style="color:#4ade80"><strong>&#10003;</strong></td><td style="color:var(--accent-red)"><strong>&#10007; 1882&ndash;1943</strong></td></tr>
+            <tr><td class="obj-td-left">Right to vote</td><td style="color:#4ade80"><strong>&#10003; Granted 1870</strong></td><td style="color:var(--accent-red)"><strong>&#10007; Not until 1943</strong></td></tr>
+            <tr><td class="obj-td-left">U.S. citizenship</td><td style="color:#4ade80"><strong>&#10003; Granted 1868</strong></td><td style="color:var(--accent-red)"><strong>&#10007; Not until 1943</strong></td></tr>
+            <tr><td class="obj-td-left">Own land</td><td style="color:#4ade80"><strong>&#10003; No state ban</strong></td><td style="color:var(--accent-red)"><strong>&#10007; Banned 1913&ndash;1956</strong></td></tr>
+            <tr><td class="obj-td-left">Testify in court</td><td style="color:#4ade80"><strong>&#10003; Granted 1863</strong></td><td style="color:var(--accent-red)"><strong>&#10007; Banned 1854&ndash;1873</strong></td></tr>
+            <tr><td class="obj-td-left">Immigrate</td><td style="color:#4ade80"><strong>&#10003; No federal ban</strong></td><td style="color:var(--accent-red)"><strong>&#10007; Banned 1882&ndash;1943</strong></td></tr>
             <tr style="background:rgba(230,57,70,0.08)"><td class="obj-td-left" style="color:var(--accent-red)"><strong>CA homicide arrest rate</strong></td><td class="obj-hl" style="color:var(--accent-red)"><strong>4.4&times;</strong></td><td class="obj-hl" style="color:#4ade80"><strong>0.42&times;</strong></td></tr>
           </tbody>
         </table>
       </div>
-
-      <p style="font-size:10px;color:var(--text-muted);font-family:'Source Code Pro',monospace;margin-top:-4px">CA homicide arrest rates from CA AG Table 31, 25-year average. The 0.42&times; figure is for Asian/Other Californians as reported in Table 31, which is the group that contains Chinese Americans plus Japanese, Korean, Vietnamese, Filipino, South Asian, and Pacific Islander Californians. Chinese-specific subcategories aren&rsquo;t broken out in the state&rsquo;s arrest reporting. Asian-American descendants of the exclusion era are the majority of this category in California.</p>
 
       <div class="obj-highlight">
         More severe legal discrimination on every dimension in the table. Arrest rate for homicide: <strong>one-tenth</strong> of the less-discriminated-against group. If historical legal discrimination were the driver of modern offending patterns, this result is exactly backwards.
@@ -3996,9 +4393,8 @@ section[id] { scroll-margin-top: 70px; }
         <div class="obj-chart-title">Virginia Murder Offenders by Race, 2000&ndash;2024</div>
         <div class="obj-chart-sub">Source: Virginia State Police, annual <em>Crime in Virginia</em> reports.</div>
         <div class="obj-toggle-row">
-          <button onclick="toggleVAChart('counts')" id="btn-va-counts" class="obj-toggle">Counts</button>
-          <button onclick="toggleVAChart('pct')" id="btn-va-pct" class="obj-toggle">% of Offenders</button>
           <button onclick="toggleVAChart('rate')" id="btn-va-rate" class="obj-toggle obj-toggle-active">Rate (&divide; Pop)</button>
+          <button onclick="toggleVAChart('counts')" id="btn-va-counts" class="obj-toggle">Counts</button>
         </div>
         <div id="vaChartSubNote" class="obj-note-box" style="margin:0 0 10px"><strong>Rate</strong> = offender share &divide; population share (3-census avg). White includes Hispanic (UCR limitation).</div>
         <div class="obj-chart-wrap-tall"><canvas id="chartVAHomicide"></canvas></div>
@@ -4117,6 +4513,15 @@ section[id] { scroll-margin-top: 70px; }
           <div class="obj-multi-share">66.2%</div>
           <div class="obj-multi-mult">3.4&times;</div>
         </div>
+        <div class="obj-multi-row">
+          <div>
+            <div class="obj-multi-name">California</div>
+            <div class="obj-multi-desc">Free state since 1850 &middot; no slavery, no Jim Crow</div>
+          </div>
+          <div class="obj-multi-pop">6.0%</div>
+          <div class="obj-multi-share">26.1%</div>
+          <div class="obj-multi-mult">4.4&times;</div>
+        </div>
       </div>
 
       <div class="obj-pattern-banner">
@@ -4140,8 +4545,8 @@ section[id] { scroll-margin-top: 70px; }
       <p>A <a href="https://www.instagram.com/reel/DOe5p6uiI8P/" target="_blank">viral Garrison Hayes video</a> claims the <a href="https://www.bop.gov/about/statistics/statistics_inmate_race.jsp" target="_blank">BOP Race page</a> shows more White than Black inmates. It does &mdash; because BOP treats Hispanic as an ethnicity, not a race. <strong>Every Hispanic inmate is also counted as &ldquo;White.&rdquo;</strong></p>
 
       <div class="obj-note-box">
-        BOP Race page: <strong>87,024 &ldquo;White&rdquo;</strong><br>
-        BOP Ethnicity page: <strong>45,109 Hispanic</strong><br>
+        <a href="https://www.bop.gov/about/statistics/statistics_inmate_race.jsp" target="_blank" style="color:inherit;text-decoration:underline">BOP Race page</a>: <strong>87,024 &ldquo;White&rdquo;</strong><br>
+        <a href="https://www.bop.gov/about/statistics/statistics_inmate_ethnicity.jsp" target="_blank" style="color:inherit;text-decoration:underline">BOP Ethnicity page</a>: <strong>45,109 Hispanic</strong><br>
         87,024 &minus; 45,109 = <strong>41,915 actual non-Hispanic White (27.4%)</strong>
       </div>
 
@@ -4179,6 +4584,57 @@ section[id] { scroll-margin-top: 70px; }
       <div class="obj-highlight">
         Non-Hispanic White Americans &mdash; ~60% of the population &mdash; are <strong>27.4%</strong> of federal inmates. Underrepresented at 0.46&times;. Black Americans overrepresented at 3.0&times;. The &ldquo;most prisoners are White&rdquo; claim requires reading one BOP page and ignoring the one next to it.
       </div>
+
+      <h4>State Prisons &middot; The Other 83%</h4>
+
+      <p>The BOP is just the federal system &mdash; 209,000 inmates. State prisons hold <strong>five times more people</strong> (~1,047,000). If the pattern is really a federal-prosecution artifact, state prisons should look different. They don&rsquo;t.</p>
+
+      <div class="obj-table-wrap">
+        <table class="obj-table">
+          <thead><tr>
+            <th style="text-align:left;padding-left:20px">Race</th>
+            <th>State Share</th>
+            <th>US Pop</th>
+            <th class="obj-hl">Mult</th>
+            <th>Imprisonment Rate<br><span style="font-weight:400;font-size:10px;color:var(--text-muted)">(per 100K adults)</span></th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="obj-td-left"><strong>Black</strong></td><td><strong>~33%</strong></td><td>~13%</td><td class="obj-hl"><strong>2.5&times;</strong></td><td><strong>1,218</strong></td></tr>
+            <tr><td class="obj-td-left"><strong>Hispanic</strong></td><td><strong>~21%</strong></td><td>~19%</td><td class="obj-hl"><strong>1.1&times;</strong></td><td><strong>606</strong></td></tr>
+            <tr><td class="obj-td-left"><strong>White (non-Hisp)</strong></td><td><strong>~32%</strong></td><td>~60%</td><td class="obj-hl" style="color:#4ade80"><strong>0.5&times;</strong></td><td><strong>231</strong></td></tr>
+            <tr><td class="obj-td-left">Native American</td><td>~2%</td><td>~1.3%</td><td class="obj-hl">1.5&times;</td><td>1,045</td></tr>
+            <tr><td class="obj-td-left">Asian / PI</td><td>~1%</td><td>~6%</td><td class="obj-hl" style="color:#4ade80">0.17&times;</td><td>88</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:10px;color:var(--text-muted);font-family:'Source Code Pro',monospace;margin-top:-4px;text-align:center">Source: <a href="https://bjs.ojp.gov/document/p23st.pdf" target="_blank">BJS, Prisoners in 2023 &mdash; Statistical Tables</a> (NCJ 310197, published Sept. 2025). Imprisonment rate is for sentenced prisoners with sentences &gt;1 year.</p>
+
+      <div class="obj-stat-row">
+        <div class="obj-stat-box">
+          <div class="obj-stat-num">5.3&times;</div>
+          <div class="obj-stat-label">Black / White Rate</div>
+          <div class="obj-stat-sub">1,218 vs 231 per 100K</div>
+        </div>
+        <div class="obj-stat-box">
+          <div class="obj-stat-num" style="color:var(--hispanic-race)">2.6&times;</div>
+          <div class="obj-stat-label">Hispanic / White Rate</div>
+          <div class="obj-stat-sub">606 vs 231 per 100K</div>
+        </div>
+        <div class="obj-stat-box">
+          <div class="obj-stat-num">1.04M</div>
+          <div class="obj-stat-label">State Prison Total</div>
+          <div class="obj-stat-sub">vs 209K federal</div>
+        </div>
+        <div class="obj-stat-box">
+          <div class="obj-stat-num">50</div>
+          <div class="obj-stat-label">Independent Systems</div>
+          <div class="obj-stat-sub">Every state, same pattern</div>
+        </div>
+      </div>
+
+      <div class="obj-highlight">
+        <strong>Same directional pattern, different magnitudes.</strong> Federal BOP shows Black 3.0&times; / White 0.46&times;. State prisons show Black 2.5&times; / White 0.5&times;. Arrest data, federal custody, state custody, victim surveys (NCVS) &mdash; all four independent measurements produce the same rank order and the same underrepresentation of White Americans. The &ldquo;mass incarceration hides a White majority&rdquo; story doesn&rsquo;t survive the arithmetic at either level of the system.
+      </div>
     </div>
     <!-- /OBJECTION 7 -->
 
@@ -4207,6 +4663,28 @@ section[id] { scroll-margin-top: 70px; }
     <p class="obj-sources-modal-intro">All murder offender data is sourced from these annual reports. Offender tables are typically in the first 15&ndash;20 pages.</p>
     <div class="obj-sources-list" id="vaSourcesList"></div>
     <p class="obj-sources-footer">25 reports &middot; 2000&ndash;2024 &middot; Published by the Virginia State Police</p>
+  </div>
+</div>
+
+<!-- NYC SOURCES MODAL -->
+<div class="obj-sources-modal" id="nycSourcesModal" onclick="if(event.target===this)closeObjModal('nycSourcesModal')">
+  <div class="obj-sources-modal-inner">
+    <button class="obj-sources-modal-close" onclick="closeObjModal('nycSourcesModal')">&times;</button>
+    <h3>NYPD Enforcement Report Archive</h3>
+    <p class="obj-sources-modal-intro">All murder, rape, and robbery arrestee demographics come from the NYPD Crime &amp; Enforcement Activity Report, published yearly since 2008. Each link opens the annual PDF.</p>
+    <div class="obj-sources-list" id="nycSourcesList"></div>
+    <p class="obj-sources-footer">17 reports &middot; 2008&ndash;2024 &middot; Published by the New York City Police Department</p>
+  </div>
+</div>
+
+<!-- NYC OPEN DATA MODAL (kidnapping) -->
+<div class="obj-sources-modal" id="nycOpenDataModal" onclick="if(event.target===this)closeObjModal('nycOpenDataModal')">
+  <div class="obj-sources-modal-inner">
+    <button class="obj-sources-modal-close" onclick="closeObjModal('nycOpenDataModal')">&times;</button>
+    <h3>NYC Open Data &middot; NYPD Arrests (Historic)</h3>
+    <p class="obj-sources-modal-intro">The NYPD Enforcement Report doesn&rsquo;t break out kidnapping arrests by race. Kidnapping data is drawn from NYC Open Data&rsquo;s case-level arrest dataset, which contains every NYPD arrest 2006&ndash;present with suspect race and offense description.</p>
+    <div class="obj-sources-list" id="nycOpenDataList"></div>
+    <p class="obj-sources-footer">1 dataset &middot; Updated quarterly &middot; Published by NYC.gov Open Data</p>
   </div>
 </div>
 
@@ -4732,6 +5210,124 @@ function raceLabel(race) {
   return race === 'Other' ? 'Asian/Other' : race;
 }
 
+// Compact label for brackets where space is tight
+function raceLabelShort(race) {
+  return race === 'Other' ? 'Asian' : race;
+}
+
+// Build flat 16-bar interracial chart (4 suspects × 4 victims, all in one row)
+// Returns HTML string. Assumes crime.details is a 4x4 matrix keyed by race.
+function buildFlatInterracial(crime, city, dtSingular) {
+  // Suspect order: by total count descending (matches screenshot convention)
+  const suspectRaces = Object.keys(crime.details)
+    .sort((a, b) => (crime.byRace[b] || 0) - (crime.byRace[a] || 0));
+  // Victim order within each suspect: fixed by population key order
+  const victimRaces = Object.keys(city.population);
+
+  // Max value for scaling
+  let maxVal = 0;
+  Object.values(crime.details).forEach(v => Object.values(v).forEach(c => { if (c > maxVal) maxVal = c; }));
+  if (maxVal === 0) maxVal = 1;
+
+  // Build 16 cells
+  const cells = [];
+  suspectRaces.forEach(s => {
+    victimRaces.forEach(v => {
+      const count = (crime.details[s] && crime.details[s][v]) || 0;
+      cells.push({ suspect: s, victim: v, count });
+    });
+  });
+
+  // Bars
+  const barsHTML = cells.map(({ suspect, victim, count }) => {
+    const h = (count / maxVal) * 100;
+    const color = raceColors[suspect];
+    const pctOfGroup = (crime.byRace[suspect] || 0) > 0 ? ((count / crime.byRace[suspect]) * 100).toFixed(1) : '0';
+    const pctOfTotal = crime.total > 0 ? ((count / crime.total) * 100).toFixed(1) : '0';
+    const ttData = `data-tt-s="${raceLabel(suspect)}" data-tt-v="${raceLabel(victim)}" data-tt-c="${count}" data-tt-g="${crime.byRace[suspect] || 0}" data-tt-t="${crime.total}" data-tt-pg="${pctOfGroup}" data-tt-pt="${pctOfTotal}" data-tt-crime="${crime.label}" data-tt-dt="${city.dataType}" data-tt-pop="${city.population[victim]}"`;
+    return `
+      <div class="vc-flat-col">
+        <div class="vc-flat-bar vc-tt" ${ttData} style="background:${color};" data-height="${h}">
+          <div class="vc-flat-val" style="color:${color};">${count.toLocaleString()}</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Labels: "Black on Hispanic" with connector styling
+  const labelsHTML = cells.map(({ suspect, victim }) => {
+    const sColor = raceColors[suspect];
+    const vColor = raceColors[victim];
+    return `
+      <div class="vc-flat-label-cell">
+        <div class="vc-flat-label"><span style="color:${sColor};">${raceLabelShort(suspect)}</span><span class="vc-flat-on">on</span><span style="color:${vColor};">${raceLabelShort(victim)}</span></div>
+      </div>
+    `;
+  }).join('');
+
+  // Brackets: one per suspect race, spanning its 4 columns
+  const bracketsHTML = suspectRaces.map(s => {
+    const total = crime.byRace[s] || 0;
+    return `
+      <div class="vc-flat-bracket" style="color:${raceColors[s]};">
+        <div class="vc-flat-bracket-info">
+          <span class="vc-flat-bracket-num">${total.toLocaleString()}</span>${raceLabelShort(s)} ${dtSingular}s
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Biggest interracial disparity: find the largest forward flow S->V (S != V) and compare to its reverse V->S
+  let bigS = null, bigV = null, bigN = -1;
+  suspectRaces.forEach(s => {
+    victimRaces.forEach(v => {
+      if (s === v) return;
+      const n = (crime.details[s] && crime.details[s][v]) || 0;
+      if (n > bigN) { bigN = n; bigS = s; bigV = v; }
+    });
+  });
+  let disparityHTML = '';
+  if (bigS && bigV && bigN > 0) {
+    const reverseN = (crime.details[bigV] && crime.details[bigV][bigS]) || 0;
+    const ratioText = reverseN === 0
+      ? `${bigN}:0`
+      : (bigN / reverseN >= 2
+          ? `${(bigN / reverseN).toFixed(bigN / reverseN >= 10 ? 0 : 1)}×`
+          : `${(bigN / reverseN).toFixed(1)}×`);
+    const ratioLabel = reverseN === 0 ? 'one-way' : 'more common';
+    disparityHTML = `
+      <div class="vc-flat-disparity">
+        <div class="vc-flat-disp-title">Biggest interracial disparity</div>
+        <div class="vc-flat-disp-side vc-flat-disp-major">
+          <div class="vc-flat-disp-count">${bigN.toLocaleString()}</div>
+          <div class="vc-flat-disp-pair">
+            <span style="color:${raceColors[bigS]};">${raceLabelShort(bigS)}</span><span class="vc-flat-disp-on">on</span><span style="color:${raceColors[bigV]};">${raceLabelShort(bigV)}</span>
+          </div>
+        </div>
+        <div class="vc-flat-disp-ratio">
+          <div class="vc-flat-disp-ratio-num">${ratioText}</div>
+          <div class="vc-flat-disp-ratio-label">${ratioLabel}</div>
+        </div>
+        <div class="vc-flat-disp-side">
+          <div class="vc-flat-disp-count">${reverseN.toLocaleString()}</div>
+          <div class="vc-flat-disp-pair">
+            <span style="color:${raceColors[bigV]};">${raceLabelShort(bigV)}</span><span class="vc-flat-disp-on">on</span><span style="color:${raceColors[bigS]};">${raceLabelShort(bigS)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="vc-chart-flat">
+      <div class="vc-flat-track">${barsHTML}</div>
+      <div class="vc-flat-labels">${labelsHTML}</div>
+      <div class="vc-flat-brackets">${bracketsHTML}</div>
+      ${disparityHTML}
+    </div>
+  `;
+}
+
 // ==================== AMBIENT AUDIO ====================
 let audioCtx = null;
 let audioPlaying = false;
@@ -5024,6 +5620,90 @@ function switchCrime(crimeKey) {
   setTimeout(() => setupTrendTooltips(), 100);
 }
 
+let cityDisproCrime = null;
+let currentCityCrime = 'homicide';
+
+function switchCityCrime(crimeKey) {
+  currentCityCrime = crimeKey;
+  cityDisproCrime = crimeKey;
+  // Full re-render of the city detail section so the interracial chart AND the dispro card both update
+  renderCityDetail(currentCity);
+}
+
+function renderCityDisproCard(cityId, crimeKey) {
+  const city = cityData[cityId];
+  if (!city) return '';
+  const crime = city.crimes[crimeKey];
+  if (!crime) return '';
+  if (crime.pending) {
+    const pNote = crime.pendingNote || 'Data Pending';
+    const isDenied = pNote.toLowerCase().includes('denied');
+    return `
+      <div class="crime-card-pending" style="min-height: 180px;">
+        <div class="pending-label">${crime.label}</div>
+        <div class="pending-badge" ${isDenied ? 'style="color:var(--accent-red); border-color:var(--accent-red);"' : ''}>${isDenied ? 'PRR Denied' : pNote}</div>
+        <div class="pending-note" style="margin-top:10px;">${isDenied ? 'Records request denied by department' : 'Records request in progress'}</div>
+      </div>
+    `;
+  }
+  const raceKeys = Object.keys(city.population);
+  const sortedRaces = raceKeys.slice().sort((a, b) => {
+    const d = (parseFloat(crime.overrep[b]) || 0) - (parseFloat(crime.overrep[a]) || 0);
+    if (d !== 0) return d;
+    return (crime.byRace[b] || 0) - (crime.byRace[a] || 0);
+  });
+  const rows = sortedRaces.map(race => {
+    const pop = city.population[race];
+    const arr = crime.pcts[race];
+    const diff = arr - pop;
+    const diffPct = Math.round((diff / pop) * 100);
+    const isOver = diff > 2;
+    const isUnder = diff < -2;
+    const perCap = crime.overrep[race];
+    return `
+      <div class="comparison-row" data-tt-race="${race}" data-tt-color="${raceColors[race]}" data-tt-percap="${perCap}" data-tt-pop="${pop}" data-tt-arr="${arr}" data-tt-crime="${crime.label}" data-tt-context="${city.name}">
+        <div class="comparison-row-label" style="color: ${raceColors[race]};">${raceLabel(race)}</div>
+        <div class="comparison-bar-pair">
+          <div class="comparison-bar-wrapper">
+            <div class="comparison-bar-tag">Pop</div>
+            <div class="comparison-bar-track">
+              <div class="comparison-bar-fill pop-bar" style="width: ${pop}%; background: ${raceColors[race]};" data-width="${pop}">
+                ${pop < 20 ? `<span class="bar-pct-outside">◂ ${pop}%</span>` : `<span class="bar-pct-inside">${pop}%</span>`}
+              </div>
+            </div>
+          </div>
+          <div class="comparison-bar-wrapper">
+            <div class="comparison-bar-tag">${city.dataType === 'Suspects' ? 'Sus' : 'Arr'}</div>
+            <div class="comparison-bar-track">
+              <div class="comparison-bar-fill" style="width: ${arr}%; background: ${raceColors[race]};" data-width="${arr}">
+                ${arr < 20 ? `<span class="bar-pct-outside">◂ ${arr}%</span>` : `<span class="bar-pct-inside">${arr}%</span>`}
+              </div>
+            </div>
+          </div>
+          ${isOver ? `<div class="comparison-delta over">+${diffPct}% OVER</div>` : 
+            isUnder ? `<div class="comparison-delta under">${diffPct}% UNDER</div>` : 
+            `<div class="comparison-delta" style="color:var(--text-muted);">~Proportional</div>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+  return `
+    <div class="comparison-card">
+      <div class="comparison-card-title">${crime.label}</div>
+      ${rows}
+    </div>
+  `;
+}
+
+function switchCityDispro(cityId, crimeKey) {
+  cityDisproCrime = crimeKey;
+  const grid = document.getElementById('cityDisproGrid');
+  if (grid) grid.innerHTML = renderCityDisproCard(cityId, crimeKey);
+  document.querySelectorAll('.state-toggle-btn[data-dispro-crime]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.disproCrime === crimeKey);
+  });
+}
+
 function renderCityDetail(cityId) {
   const city = cityData[cityId];
   if (!city) {
@@ -5062,26 +5742,30 @@ function renderCityDetail(cityId) {
   showPct = false; // reset toggle on city switch
   const container = document.getElementById('cityDetailContent');
   const raceKeys = Object.keys(city.population);
+  // If the currently-selected crime doesn't exist on this city's data model, fall back to first crime
+  if (!city.crimes[currentCityCrime]) {
+    const firstKey = Object.keys(city.crimes)[0];
+    currentCityCrime = firstKey;
+  }
+  // Keep cityDisproCrime in sync for any lingering references
+  cityDisproCrime = currentCityCrime;
   
   container.innerHTML = `
-    <div class="city-date-display">
-      <div class="city-date-label">${city.source}</div>
-      <div class="city-date-value" id="cityDateTypewriter">${city.period}</div>
-      <div style="display:block; text-align:center;">
-        <div class="city-date-duration" id="cityDurationTypewriter">${city.duration}</div>
-      </div>
-    </div>
-    <div style="text-align: center; margin: 24px 0 22px; font-family: 'Source Code Pro', monospace; font-size: 10px; color: var(--text-muted); line-height: 1.8; letter-spacing: 0.5px;">
-      <span style="color: var(--text-secondary); font-weight: 600;">each group</span> = ${city.dataType.toLowerCase()} by suspect race · <span style="color: var(--text-secondary); font-weight: 600;">columns</span> = breakdown by the other race involved<br>
-      <span style="color: var(--text-secondary); font-weight: 600;">striped column</span> = that race's share of the city population<br>
-      <span style="color: var(--text-secondary); font-weight: 600;">rate</span> = ${city.dataType.toLowerCase()} share ÷ population share <span style="opacity: 0.6;">(1.0 = proportional)</span>
-    </div>
-    <div class="detail-grid">
-      ${Object.entries(city.crimes).map(([key, crime]) => {
+    <div class="detail-grid" style="grid-template-columns:1fr; max-width:880px; margin-left:auto; margin-right:auto;">
+      ${Object.entries(city.crimes).filter(([key]) => key === currentCityCrime).map(([key, crime]) => {
         if (crime.pending) {
           const pNote = crime.pendingNote || 'Data Pending';
           const isDenied = pNote.toLowerCase().includes('denied');
+          const pendingToggleHTML = `
+            <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin:0 auto 18px;">
+              ${Object.entries(city.crimes).map(([ck, cv]) => {
+                const isActive = ck === currentCityCrime;
+                return `<button class="state-toggle-btn state-crime-btn${isActive ? ' active' : ''}" data-city-crime="${ck}" onclick="switchCityCrime('${ck}')">${cv.label}${cv.pending ? ' *' : ''}</button>`;
+              }).join('')}
+            </div>
+          `;
           return `
+            ${pendingToggleHTML}
             <div class="crime-card-pending">
               <div class="pending-label">${crime.label}</div>
               <div class="pending-badge" ${isDenied ? 'style="color:var(--accent-red); border-color:var(--accent-red);"' : ''}>${isDenied ? 'PRR Denied' : pNote}</div>
@@ -5140,62 +5824,7 @@ function renderCityDetail(cityId) {
           };
           const targetedHTML = buildStrip('most interracially targeted', targetedRanked, '') +
                                buildStrip('biggest interracial cause', causeRanked, 'vc-cause');
-          barsHTML = targetedHTML + `<div class="vc-chart">` + Object.entries(crime.details)
-            .sort((a, b) => (crime.byRace[b[0]] || 0) - (crime.byRace[a[0]] || 0))
-            .map(([suspectRace, victims]) => {
-            const popPct = city.population[suspectRace];
-            const popHeight = Math.min(100, popPct);
-            const stripeBg = `repeating-linear-gradient(45deg, ${raceColors[suspectRace]} 0, ${raceColors[suspectRace]} 5px, rgba(0,0,0,0.6) 5px, rgba(0,0,0,0.6) 9px)`;
-            const victimEntries = Object.entries(victims);
-            const groupTotal = crime.byRace[suspectRace];
-            const colCells = victimEntries.map(([victimRace, count]) => {
-              const h = (count / maxVal) * 100;
-              const pctOfGroup = groupTotal > 0 ? ((count / groupTotal) * 100).toFixed(1) : '0';
-              const pctOfTotal = crime.total > 0 ? ((count / crime.total) * 100).toFixed(1) : '0';
-              const ttData = `data-tt-s="${raceLabel(suspectRace)}" data-tt-v="${raceLabel(victimRace)}" data-tt-c="${count}" data-tt-g="${groupTotal}" data-tt-t="${crime.total}" data-tt-pg="${pctOfGroup}" data-tt-pt="${pctOfTotal}" data-tt-crime="${crime.label}" data-tt-dt="${city.dataType}" data-tt-pop="${city.population[victimRace]}"`;
-              return `
-                <div class="vc-col">
-                  <div class="vc-col-track">
-                    <div class="vc-col-fill vc-tt" ${ttData} style="background:${raceColors[victimRace]};" data-height="${h}">
-                      <div class="vc-col-val" style="color:${raceColors[victimRace]};">${count}</div>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('') + `
-                <div class="vc-col">
-                  <div class="vc-col-track">
-                    <div class="vc-col-fill" style="background:${stripeBg};" data-height="${popHeight}">
-                      <div class="vc-col-val" style="color:${raceColors[suspectRace]};">${popPct}%</div>
-                    </div>
-                  </div>
-                </div>
-            `;
-            const tickCells = victimEntries.map(([victimRace]) => `
-              <div class="vc-tick-wrap"><div class="vc-col-tick">on <span style="color:${raceColors[victimRace]};">${raceLabel(victimRace)}</span></div></div>
-            `).join('') + `
-              <div class="vc-tick-wrap"><div class="vc-col-tick vc-pop-tick">${raceLabel(suspectRace)} pop</div></div>
-            `;
-            return `
-              <div class="vc-group">
-                <div class="vc-group-pill" style="color:${raceColors[suspectRace]}; border-color:${raceColors[suspectRace]}; background: ${raceColors[suspectRace]}15;">
-                  <div class="vc-group-pill-num">${groupTotal}</div>
-                  <div class="vc-group-pill-label">${raceLabel(suspectRace)} ${dtSingular}s</div>
-                </div>
-                <div class="vc-columns">
-                  ${colCells}
-                </div>
-                <div class="vc-tick-row">
-                  ${tickCells}
-                </div>
-                <div class="vc-bracket-row" style="color:${raceColors[suspectRace]};">
-                  <div class="vc-bracket-span"></div>
-                  <div class="vc-bracket-gap"></div>
-                </div>
-                <div class="vc-bracket-label" style="color:${raceColors[suspectRace]};">${raceLabel(suspectRace)} ${dtSingular}s</div>
-              </div>
-            `;
-          }).join('') + `</div>`;
+          barsHTML = buildFlatInterracial(crime, city, dtSingular) + targetedHTML;
         } else {
           // No cross-tab data — compact vertical paired bars (arrest % vs population %)
           const maxPct = Math.max(
@@ -5283,10 +5912,20 @@ function renderCityDetail(cityId) {
             ⚠ ${crime.unidentifiedSuspectIncidents} of ${crime.totalIncidents} incidents (${(100 - crime.clearanceContextPct).toFixed(1)}%) had no identified suspect
           </div>
         ` : '';
+        // MINI CHART REMOVED — main 16-bar chart carries the breakdown on its own.
         return `
           <div class="crime-card" style="cursor:default;">
+            <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin:0 auto 18px;">
+              ${Object.entries(city.crimes).map(([ck, cv]) => {
+                const isActive = ck === currentCityCrime;
+                return `<button class="state-toggle-btn state-crime-btn${isActive ? ' active' : ''}" data-city-crime="${ck}" onclick="switchCityCrime('${ck}')">${cv.label}${cv.pending ? ' *' : ''}</button>`;
+              }).join('')}
+            </div>
             <div class="vc-crime-stamp-wrap">
               <div class="vc-crime-stamp" data-card-stamp="${cardKey}">${crime.label} ${city.dataType}</div>
+            </div>
+            <div style="text-align:center; margin:10px 0 4px;">
+              <div style="font-family:'Playfair Display',serif; font-size:clamp(20px,2.6vw,26px); color:var(--text-primary); letter-spacing:1px;">${city.name.toUpperCase()}</div>
             </div>
             <div style="text-align:center; margin-bottom: 8px;">
               <div class="crime-card-total" style="font-size:15px; color:var(--accent-red); font-weight:700; letter-spacing:1px;">
@@ -5322,66 +5961,8 @@ function renderCityDetail(cityId) {
         <div class="section-title" style="font-size: clamp(18px, 2.5vw, 26px);">Population Share vs. ${city.dataType} Share</div>
         <div class="section-desc">${city.name} · ${city.period}</div>
       </div>
-      <div class="comparison-grid">
-        ${Object.entries(city.crimes).map(([key, crime]) => {
-          if (crime.pending) {
-            const pNote = crime.pendingNote || 'Data Pending';
-            const isDenied = pNote.toLowerCase().includes('denied');
-            return `
-              <div class="crime-card-pending" style="min-height: 180px;">
-                <div class="pending-label">${crime.label}</div>
-                <div class="pending-badge" ${isDenied ? 'style="color:var(--accent-red); border-color:var(--accent-red);"' : ''}>${isDenied ? 'PRR Denied' : pNote}</div>
-              </div>
-            `;
-          }
-          return `
-            <div class="comparison-card">
-              <div class="comparison-card-title">${crime.label}</div>
-              ${raceKeys.slice()
-                .sort((a, b) => {
-                  const d = (parseFloat(crime.overrep[b]) || 0) - (parseFloat(crime.overrep[a]) || 0);
-                  if (d !== 0) return d;
-                  return (crime.byRace[b] || 0) - (crime.byRace[a] || 0);
-                })
-                .map(race => {
-                const pop = city.population[race];
-                const arr = crime.pcts[race];
-                const diff = arr - pop;
-                const diffPct = Math.round((diff / pop) * 100);
-                const isOver = diff > 2;
-                const isUnder = diff < -2;
-                const perCap = crime.overrep[race];
-                
-                return `
-                  <div class="comparison-row" data-tt-race="${race}" data-tt-color="${raceColors[race]}" data-tt-percap="${perCap}" data-tt-pop="${pop}" data-tt-arr="${arr}" data-tt-crime="${crime.label}" data-tt-context="${city.name}">
-                    <div class="comparison-row-label" style="color: ${raceColors[race]};">${raceLabel(race)}</div>
-                    <div class="comparison-bar-pair">
-                      <div class="comparison-bar-wrapper">
-                        <div class="comparison-bar-tag">Pop</div>
-                        <div class="comparison-bar-track">
-                          <div class="comparison-bar-fill pop-bar" style="width: ${pop}%; background: ${raceColors[race]};" data-width="${pop}">
-                            ${pop < 20 ? `<span class="bar-pct-outside">◂ ${pop}%</span>` : `<span class="bar-pct-inside">${pop}%</span>`}
-                          </div>
-                        </div>
-                      </div>
-                      <div class="comparison-bar-wrapper">
-                        <div class="comparison-bar-tag">${city.dataType === 'Suspects' ? 'Sus' : 'Arr'}</div>
-                        <div class="comparison-bar-track">
-                          <div class="comparison-bar-fill" style="width: ${arr}%; background: ${raceColors[race]};" data-width="${arr}">
-                            ${arr < 20 ? `<span class="bar-pct-outside">◂ ${arr}%</span>` : `<span class="bar-pct-inside">${arr}%</span>`}
-                          </div>
-                        </div>
-                      </div>
-                      ${isOver ? `<div class="comparison-delta over">+${diffPct}% OVER</div>` : 
-                        isUnder ? `<div class="comparison-delta under">${diffPct}% UNDER</div>` : 
-                        `<div class="comparison-delta" style="color:var(--text-muted);">~Proportional</div>`}
-                    </div>
-                  </div>
-                `;
-              }).join('')}
-            </div>
-          `;
-        }).join('')}
+      <div class="comparison-grid" id="cityDisproGrid">
+        ${renderCityDisproCard(cityId, currentCityCrime)}
       </div>
     </div>
     
@@ -5392,7 +5973,7 @@ function renderCityDetail(cityId) {
     container.querySelectorAll('.race-bar-fill, .modal-bar-fill').forEach(bar => {
       bar.style.width = bar.dataset.width + '%';
     });
-    container.querySelectorAll('.vc-col-fill').forEach(col => {
+    container.querySelectorAll('.vc-col-fill, .vc-flat-bar').forEach(col => {
       col.style.height = col.dataset.height + '%';
     });
     // Per-crime-card stamp + typewriter observer - slams in when scrolled into view
@@ -5435,7 +6016,7 @@ function attachCardAnimations(container) {
     container.querySelectorAll('.race-bar-fill, .modal-bar-fill').forEach(bar => {
       bar.style.width = bar.dataset.width + '%';
     });
-    container.querySelectorAll('.vc-col-fill').forEach(col => {
+    container.querySelectorAll('.vc-col-fill, .vc-flat-bar').forEach(col => {
       col.style.height = col.dataset.height + '%';
     });
     const cardStamps = container.querySelectorAll('.vc-crime-stamp[data-card-stamp]');
@@ -5522,58 +6103,7 @@ function renderCrimeDetail(crimeKey) {
           Object.values(crime.details).forEach(v => Object.values(v).forEach(c => { if (c > maxVal) maxVal = c; }));
           if (maxVal === 0) maxVal = 1;
 
-          chartHTML = `<div class="vc-chart">` + Object.entries(crime.details)
-            .sort((a, b) => (crime.byRace[b[0]] || 0) - (crime.byRace[a[0]] || 0))
-            .map(([suspectRace, victims]) => {
-            const popPct = city.population[suspectRace];
-            const popHeight = Math.min(100, popPct);
-            const stripeBg = `repeating-linear-gradient(45deg, ${raceColors[suspectRace]} 0, ${raceColors[suspectRace]} 5px, rgba(0,0,0,0.6) 5px, rgba(0,0,0,0.6) 9px)`;
-            const victimEntries = Object.entries(victims);
-            const groupTotal = crime.byRace[suspectRace];
-            const colCells = victimEntries.map(([victimRace, count]) => {
-              const h = (count / maxVal) * 100;
-              const pctOfGroup = groupTotal > 0 ? ((count / groupTotal) * 100).toFixed(1) : '0';
-              const pctOfTotal = crime.total > 0 ? ((count / crime.total) * 100).toFixed(1) : '0';
-              const ttData = `data-tt-s="${raceLabel(suspectRace)}" data-tt-v="${raceLabel(victimRace)}" data-tt-c="${count}" data-tt-g="${groupTotal}" data-tt-t="${crime.total}" data-tt-pg="${pctOfGroup}" data-tt-pt="${pctOfTotal}" data-tt-crime="${crime.label}" data-tt-dt="${city.dataType}" data-tt-pop="${city.population[victimRace]}"`;
-              return `
-                <div class="vc-col">
-                  <div class="vc-col-track">
-                    <div class="vc-col-fill vc-tt" ${ttData} style="background:${raceColors[victimRace]};" data-height="${h}">
-                      <div class="vc-col-val" style="color:${raceColors[victimRace]};">${count}</div>
-                    </div>
-                  </div>
-                </div>
-              `;
-            }).join('') + `
-                <div class="vc-col">
-                  <div class="vc-col-track">
-                    <div class="vc-col-fill" style="background:${stripeBg};" data-height="${popHeight}">
-                      <div class="vc-col-val" style="color:${raceColors[suspectRace]};">${popPct}%</div>
-                    </div>
-                  </div>
-                </div>
-            `;
-            const tickCells = victimEntries.map(([victimRace]) => `
-              <div class="vc-tick-wrap"><div class="vc-col-tick">on <span style="color:${raceColors[victimRace]};">${raceLabel(victimRace)}</span></div></div>
-            `).join('') + `
-              <div class="vc-tick-wrap"><div class="vc-col-tick vc-pop-tick">${raceLabel(suspectRace)} pop</div></div>
-            `;
-            return `
-              <div class="vc-group">
-                <div class="vc-group-pill" style="color:${raceColors[suspectRace]}; border-color:${raceColors[suspectRace]}; background: ${raceColors[suspectRace]}15;">
-                  <div class="vc-group-pill-num">${groupTotal}</div>
-                  <div class="vc-group-pill-label">${raceLabel(suspectRace)} ${dtSingular}s</div>
-                </div>
-                <div class="vc-columns">${colCells}</div>
-                <div class="vc-tick-row">${tickCells}</div>
-                <div class="vc-bracket-row" style="color:${raceColors[suspectRace]};">
-                  <div class="vc-bracket-span"></div>
-                  <div class="vc-bracket-gap"></div>
-                </div>
-                <div class="vc-bracket-label" style="color:${raceColors[suspectRace]};">${raceLabel(suspectRace)} ${dtSingular}s</div>
-              </div>
-            `;
-          }).join('') + `</div>`;
+          chartHTML = buildFlatInterracial(crime, city, dtSingular);
         } else {
           // No cross-tab data — compact vertical paired bars
           const maxPct = Math.max(
@@ -5683,8 +6213,8 @@ function renderCrimeDetail(crimeKey) {
             </div>
             ${clearanceNote}
             <div style="margin-top:18px;">
-              ${headerStrips}
               ${chartHTML}
+              ${headerStrips}
             </div>
             ${unknownNote}
             ${noLinkNote}
@@ -5954,14 +6484,33 @@ document.addEventListener('keydown', e => {
 // ==================== TREND LINE CHARTS ====================
 let statewideMode = 'rate';
 
+let statewideCrime = 'homicide';
+
 function switchStatewideView(mode) {
   statewideMode = mode;
-  document.querySelectorAll('.state-toggle-btn').forEach(btn => {
+  document.querySelectorAll('.state-toggle-btn[data-mode]').forEach(btn => {
     btn.classList.toggle('active', btn.dataset.mode === mode);
   });
   renderTrendCharts();
+  renderComparison();
   setTimeout(() => setupTrendTooltips(), 100);
   // Re-trigger bar animations
+  document.querySelectorAll('.trend-chart-card').forEach(el => el.classList.add('visible'));
+}
+
+function switchStatewideCrime(crime) {
+  statewideCrime = crime;
+  // Top toggle (above trend chart)
+  document.querySelectorAll('.state-toggle-btn[data-crime]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.crime === crime);
+  });
+  // Local toggle (above comparison card)
+  document.querySelectorAll('.state-toggle-btn[data-crime-local]').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.crimeLocal === crime);
+  });
+  renderTrendCharts();
+  renderComparison();
+  setTimeout(() => setupTrendTooltips(), 100);
   document.querySelectorAll('.trend-chart-card').forEach(el => el.classList.add('visible'));
 }
 
@@ -5978,7 +6527,7 @@ function renderTrendCharts() {
   };
   const ml = modeLabels[mode];
   
-  container.innerHTML = Object.entries(statewideRates).map(([key, data]) => {
+  container.innerHTML = Object.entries(statewideRates).filter(([key]) => key === statewideCrime).map(([key, data]) => {
     // Compute data for current mode
     const modeData = {};
     races.forEach(race => {
@@ -6085,6 +6634,10 @@ function renderTrendCharts() {
     
     return `
       <div class="trend-chart-card reveal visible stagger-${Object.keys(statewideRates).indexOf(key) % 4 + 1}">
+        <div class="statewide-toggle" style="display:flex; justify-content:center; gap:0; margin:0 auto 14px;">
+          <button class="state-toggle-btn${statewideMode==='rate'?' active':''}"   data-mode="rate"   onclick="switchStatewideView('rate')">Rate</button>
+          <button class="state-toggle-btn${statewideMode==='counts'?' active':''}" data-mode="counts" onclick="switchStatewideView('counts')">Counts</button>
+        </div>
         <div class="trend-chart-title">${data.label} ${ml.title}</div>
         <div class="trend-chart-subtitle">${ml.sub}</div>
         <svg class="trend-svg" viewBox="0 0 ${svgW} ${svgH}">
@@ -6112,7 +6665,7 @@ function renderTrendCharts() {
 // ==================== COMPARISON BARS ====================
 function renderComparison() {
   const grid = document.getElementById('comparisonGrid');
-  const crimes = ['homicide', 'rape', 'robbery', 'kidnapping'];
+  const crimes = [statewideCrime];
   const labels = { homicide: 'Homicide', rape: 'Rape', robbery: 'Robbery', kidnapping: 'Kidnapping' };
   const races = ['White', 'Black', 'Hispanic', 'Other'];
   
@@ -6125,7 +6678,7 @@ function renderComparison() {
       return stateAvg[crime][b] - stateAvg[crime][a];
     });
     return `
-    <div class="comparison-card reveal">
+    <div class="comparison-card">
       <div class="comparison-card-title">${labels[crime]}</div>
       ${sortedRaces.map(race => {
         const pop = stateAvg.population[race];
@@ -6379,6 +6932,24 @@ function setupScrollAnimations() {
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  
+  // California map growth — triggers every time user scrolls it in/out of view
+  const caMap = document.getElementById('caMapContainer');
+  if (caMap) {
+    const caMapObs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Force reflow so the transition runs cleanly on re-enter
+          caMap.classList.remove('ca-grown');
+          void caMap.offsetWidth;
+          caMap.classList.add('ca-grown');
+        } else {
+          caMap.classList.remove('ca-grown');
+        }
+      });
+    }, { threshold: 0.25 });
+    caMapObs.observe(caMap);
+  }
   
   // Trigger statewide badge slam and duration typewriter every time section scrolls in
   const swSection = document.getElementById('statewide');
@@ -6690,7 +7261,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (num.indexOf('2') !== -1) {
       buildCAHomicide(); buildCADispro();
       buildNYPDOfficers();
-      buildNYCMurder(); buildNYCRape(); buildNYCRobbery(); buildNYCKidnapping();
+      buildOnce('nycCombined', buildNYCCombined);
     }
     if (num.indexOf('3') !== -1) { buildExonAdj(); }
     if (num.indexOf('4') !== -1) { buildPolice(); }
@@ -6718,7 +7289,7 @@ document.addEventListener('DOMContentLoaded', () => {
       caRate[r].push(caPop[r] > 0 ? Math.round((pct / caPop[r]) * 100) / 100 : 0);
     });
   }
-  let caChart = null, caMode = 'counts';
+  let caChart = null, caMode = 'rate';
   function buildCAHomicide() {
     const el = document.getElementById('chartCAHomicide');
     if (!el || caChart) return;
@@ -6727,10 +7298,10 @@ document.addEventListener('DOMContentLoaded', () => {
       data: {
         labels: caYears,
         datasets: [
-          { label: 'Hispanic', data: caCounts.Hispanic.slice(), borderColor: RC.hispanic, backgroundColor: RC.hispanic, pointBackgroundColor: RC.hispanic, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
-          { label: 'Black', data: caCounts.Black.slice(), borderColor: RC.black, backgroundColor: RC.black, pointBackgroundColor: RC.black, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
-          { label: 'White', data: caCounts.White.slice(), borderColor: RC.white, backgroundColor: RC.white, pointBackgroundColor: RC.white, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
-          { label: 'Asian/Other', data: caCounts.Other.slice(), borderColor: RC.other, backgroundColor: RC.other, pointBackgroundColor: RC.other, borderWidth: 2, pointRadius: 2.5, pointHoverRadius: 5, tension: 0.15, borderDash: [5,3], fill: false }
+          { label: 'Hispanic', data: caRate.Hispanic.slice(), borderColor: RC.hispanic, backgroundColor: RC.hispanic, pointBackgroundColor: RC.hispanic, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
+          { label: 'Black', data: caRate.Black.slice(), borderColor: RC.black, backgroundColor: RC.black, pointBackgroundColor: RC.black, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
+          { label: 'White', data: caRate.White.slice(), borderColor: RC.white, backgroundColor: RC.white, pointBackgroundColor: RC.white, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
+          { label: 'Asian/Other', data: caRate.Other.slice(), borderColor: RC.other, backgroundColor: RC.other, pointBackgroundColor: RC.other, borderWidth: 2, pointRadius: 2.5, pointHoverRadius: 5, tension: 0.15, borderDash: [5,3], fill: false }
         ]
       },
       options: {
@@ -6747,12 +7318,18 @@ document.addEventListener('DOMContentLoaded', () => {
           datalabels: { display: false }
         },
         scales: {
-          y: { beginAtZero: true, title: { display: true, text: 'Homicide Arrests (Count)', color: labelColor, font: { size: 11 } }, ticks: { color: tickColor, stepSize: 200 }, grid: { color: gridColor } },
+          y: { beginAtZero: true, max: 6, title: { display: true, text: 'Disproportionality Rate (Arrest Share ÷ Pop Share)', color: labelColor, font: { size: 11 } }, ticks: { color: tickColor, stepSize: 1, callback: v => v.toFixed(1) + '×' }, grid: { color: gridColor } },
           x: { title: { display: true, text: 'Year', color: labelColor, font: { size: 11 } }, ticks: { color: tickColor, maxRotation: 45, font: { size: 10 } }, grid: { color: gridColor } }
         },
         interaction: { mode: 'nearest', axis: 'x', intersect: false }
       }
     });
+    // Show the rate note by default
+    const note = document.getElementById('caChartSubNote');
+    if (note) {
+      note.style.display = 'block';
+      note.innerHTML = '<strong>Rate</strong> = arrest share ÷ population share. 1.0× = proportional representation. Black at ~4.4× means arrest share is 4.4 times population share.';
+    }
   }
   window.toggleCAChart = function(mode) {
     if (!caChart) return;
@@ -7229,10 +7806,68 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
-  function buildNYCMurder()     { buildOnce('nycMurder',     () => makeNYCChart('chartNYCMurder', 'murder')); }
-  function buildNYCRape()       { buildOnce('nycRape',       () => makeNYCChart('chartNYCRape', 'rape')); }
-  function buildNYCRobbery()    { buildOnce('nycRobbery',    () => makeNYCChart('chartNYCRobbery', 'robbery')); }
-  function buildNYCKidnapping() { buildOnce('nycKidnapping', () => makeNYCChart('chartNYCKidnapping', 'kidnapping')); }
+  // Combined chart with crime toggle
+  let nycCombinedChart = null, nycCurrentCrime = 'murder';
+  function buildNYCCombined() {
+    const el = document.getElementById('chartNYCCombined');
+    if (!el || nycCombinedChart) return;
+    const pct = nycPct(nycCurrentCrime);
+    nycCombinedChart = new Chart(el, {
+      type: 'line',
+      data: {
+        labels: nycYears,
+        datasets: [
+          { label: 'Black', data: pct.Black, borderColor: RC.black, backgroundColor: RC.black, pointBackgroundColor: RC.black, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
+          { label: 'Hispanic', data: pct.Hispanic, borderColor: RC.hispanic, backgroundColor: RC.hispanic, pointBackgroundColor: RC.hispanic, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
+          { label: 'White', data: pct.White, borderColor: RC.white, backgroundColor: RC.white, pointBackgroundColor: RC.white, borderWidth: 2.5, pointRadius: 3, pointHoverRadius: 6, tension: 0.15, fill: false },
+          { label: 'Asian/Other', data: pct.Other, borderColor: RC.other, backgroundColor: RC.other, pointBackgroundColor: RC.other, borderWidth: 2, pointRadius: 2.5, pointHoverRadius: 5, tension: 0.15, borderDash: [5,3], fill: false }
+        ]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top', labels: { color: labelColor, usePointStyle: true, pointStyle: 'circle', padding: 14, font: { size: 11 } } },
+          tooltip: { mode: 'index', intersect: false, backgroundColor: '#12121a', borderColor: '#2a2a3a', borderWidth: 1, titleColor: '#e8e8ec', bodyColor: '#c9d1d9', padding: 10, callbacks: { label: ctx => ctx.dataset.label + ': ' + ctx.parsed.y + '%' } },
+          datalabels: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, max: 100, title: { display: true, text: '% of Known-Race Arrestees', color: labelColor, font: { size: 11 } }, ticks: { color: tickColor, callback: v => v + '%' }, grid: { color: gridColor } },
+          x: { title: { display: true, text: 'Year', color: labelColor, font: { size: 11 } }, ticks: { color: tickColor, maxRotation: 45, font: { size: 10 } }, grid: { color: gridColor } }
+        },
+        interaction: { mode: 'nearest', axis: 'x', intersect: false }
+      }
+    });
+  }
+  const nycCrimeMeta = {
+    murder:     { label: 'Murder',     title: 'NYC Murder Arrestees, 2008–2024',     sub: '17 years of NYPD arrestee demographics.', src: 'nypd' },
+    rape:       { label: 'Rape',       title: 'NYC Rape Arrestees, 2008–2024',       sub: '17 years of NYPD arrestee demographics.', src: 'nypd' },
+    robbery:    { label: 'Robbery',    title: 'NYC Robbery Arrestees, 2008–2024',    sub: '17 years of NYPD arrestee demographics.', src: 'nypd' },
+    kidnapping: { label: 'Kidnapping', title: 'NYC Kidnapping Arrestees, 2008–2024', sub: '17 years from NYC Open Data · kidnapping isn\u2019t in the NYPD Enforcement Report.', src: 'opendata' }
+  };
+  window.toggleNYCCrime = function(crime) {
+    if (!nycCombinedChart) return;
+    nycCurrentCrime = crime;
+    const pct = nycPct(crime);
+    ['Black','Hispanic','White','Other'].forEach((r,i) => { nycCombinedChart.data.datasets[i].data = pct[r]; });
+    nycCombinedChart.update();
+    const meta = nycCrimeMeta[crime];
+    const t = document.getElementById('nycChartTitle'); if (t) t.textContent = meta.title;
+    const s = document.getElementById('nycChartSub');   if (s) s.textContent = meta.sub;
+    const btn = document.getElementById('nycSourceBtn');
+    if (btn) {
+      if (meta.src === 'opendata') {
+        btn.textContent = '🔍 NYC Open Data · Historic Arrests Dataset';
+        btn.setAttribute('onclick', 'openNYCOpenDataModal()');
+      } else {
+        btn.textContent = '🔍 Verify Any Year · 17 NYPD Reports';
+        btn.setAttribute('onclick', 'openNYCSourcesModal()');
+      }
+    }
+    ['murder','rape','robbery','kidnapping'].forEach(c => {
+      const b = document.getElementById('btn-nyc-' + c);
+      if (b) b.className = 'obj-toggle' + (crime === c ? ' obj-toggle-active' : '');
+    });
+  };
 
   // ==================== SOURCES MODALS ====================
   const caSources = [
@@ -7310,10 +7945,60 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('vaSourcesModal').classList.add('active');
     document.body.style.overflow = 'hidden';
   };
+
+  // NYC sources: annual NYPD Crime & Enforcement Activity Reports (2008-2024)
+  const nycSources = [
+    { year: '2024', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2024-enforcement-report.pdf' },
+    { year: '2023', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2023-enforcement-report.pdf' },
+    { year: '2022', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2022-enforcement-report.pdf' },
+    { year: '2021', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2021-enforcement-report.pdf' },
+    { year: '2020', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2020-enforcement-report.pdf' },
+    { year: '2019', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2019-enforcement-report.pdf' },
+    { year: '2018', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2018-enforcement-report.pdf' },
+    { year: '2017', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2017-enforcement-report.pdf' },
+    { year: '2016', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2016-enforcement-report.pdf' },
+    { year: '2015', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2015-enforcement-report.pdf' },
+    { year: '2014', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2014-enforcement-report.pdf' },
+    { year: '2013', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2013-enforcement-report.pdf' },
+    { year: '2012', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2012-enforcement-report.pdf' },
+    { year: '2011', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2011-enforcement-report.pdf' },
+    { year: '2010', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2010-enforcement-report.pdf' },
+    { year: '2009', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2009-enforcement-report.pdf' },
+    { year: '2008', url: 'https://www.nyc.gov/assets/nypd/downloads/pdf/analysis_and_planning/year-end-2008-enforcement-report.pdf' },
+    { year: 'INDEX', url: 'https://www.nyc.gov/site/nypd/stats/reports-analysis/crime-enf.page', note: 'NYPD official page listing all annual reports' }
+  ];
+  window.openNYCSourcesModal = function() {
+    renderSources('nycSourcesList', nycSources, 'NYPD Enforcement Report');
+    document.getElementById('nycSourcesModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
+  // NYC Open Data (kidnapping uses the case-level dataset, not annual reports)
+  const nycOpenDataSources = [
+    { year: 'DATA', url: 'https://data.cityofnewyork.us/Public-Safety/NYPD-Arrests-Data-Historic-/8h9b-rp9u', note: 'Case-level arrests with race and offense' },
+    { year: 'FIELDS', url: 'https://data.cityofnewyork.us/api/views/8h9b-rp9u/files/6b3b8e15-d29e-4f63-8ad5-2fc2a6b99e94', note: 'Column definitions' }
+  ];
+  window.openNYCOpenDataModal = function() {
+    const sources = nycOpenDataSources;
+    const el = document.getElementById('nycOpenDataList');
+    if (!el) return;
+    el.innerHTML = sources.map(s => {
+      const note = s.note ? ' <span style="font-size:10px;color:var(--text-muted)">(' + s.note + ')</span>' : '';
+      return '<a href="' + s.url + '" target="_blank" rel="noopener">' +
+        '<span class="obj-src-year">' + s.year + '</span>' +
+        '<span class="obj-src-title">NYC Open Data' + note + '</span>' +
+        '<span class="obj-src-ext">&#8599;</span></a>';
+    }).join('');
+    document.getElementById('nycOpenDataModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       closeObjModal('caSourcesModal');
       closeObjModal('vaSourcesModal');
+      closeObjModal('nycSourcesModal');
+      closeObjModal('nycOpenDataModal');
     }
   });
 })();
