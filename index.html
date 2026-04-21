@@ -1394,8 +1394,6 @@ section[id] { scroll-margin-top: 70px; }
 .vc-col-tick.vc-pop-tick { color: var(--accent-red); opacity: 0.8; }
 @media (max-width: 540px) {
   .vc-columns { height: 190px; gap: 4px; }
-  #cityTabs { grid-template-columns: repeat(3, 1fr) !important; max-width: 100% !important; }
-  #cityTabs .city-tab { font-size: 10px !important; padding: 8px 4px !important; }
   .vc-col-fill { max-width: 16px; }
   .vc-col-val { font-size: 9px; padding: 2px 6px; }
   .vc-col-tick { font-size: 8px; letter-spacing: 0.2px; }
@@ -2166,13 +2164,34 @@ section[id] { scroll-margin-top: 70px; }
 }
 
 .state-toggle-btn.active {
-  color: var(--accent-red);
-  background: rgba(230,57,70,0.1);
-  border-color: rgba(230,57,70,0.4);
+  color: #fff;
+  background: var(--accent-red);
+  border-color: var(--accent-red);
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08), 0 2px 8px rgba(230,57,70,0.3);
 }
 
 .state-toggle-btn.active + .state-toggle-btn {
   border-left-color: rgba(230,57,70,0.4);
+}
+
+/* Crime toggle variant — independent pills that wrap cleanly on narrow widths */
+.statewide-crime-toggle {
+  row-gap: 6px !important;
+  column-gap: 6px !important;
+}
+.statewide-crime-toggle .state-toggle-btn {
+  border-radius: 4px !important;
+  border-left: 1px solid var(--border) !important;
+}
+.statewide-crime-toggle .state-toggle-btn.active {
+  border-color: var(--accent-red) !important;
+  border-left-color: var(--accent-red) !important;
+}
+
+@media (max-width: 720px) {
+  #cityTabs { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; max-width: 440px !important; }
+  #cityTabs .city-tab { font-size: 11px !important; padding: 10px 8px !important; letter-spacing: 0.8px !important; }
+  .statewide-crime-toggle .state-toggle-btn { padding: 8px 10px; font-size: 9px; letter-spacing: 1px; }
 }
 
 /* View mode toggle (By City / By Crime) */
@@ -3867,7 +3886,7 @@ section[id] { scroll-margin-top: 70px; }
     <div class="section-desc">Click any card for the full breakdown. Source data links included for every dataset.</div>
   </div>
 
-  <div class="city-tabs reveal" id="cityTabs" style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:700px;margin:0 auto 18px;">
+  <div class="city-tabs reveal" id="cityTabs" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-width:700px;margin:0 auto 18px;">
     <button class="city-tab active" data-city="sacramento" onclick="switchCity('sacramento')">Sacramento</button>
     <button class="city-tab" data-city="san_jose" onclick="switchCity('san_jose')">San José</button>
     <button class="city-tab" data-city="san_francisco" onclick="switchCity('san_francisco')">San Francisco</button>
@@ -6803,6 +6822,12 @@ function renderPattern() {
   const wPct = wt.total>0 ? (wt.inter/wt.total*100).toFixed(1) : '0';
   const bt = suspectTotals['Black'];
   const ht = suspectTotals['Hispanic'];
+  // Gap: how much more interracial victimization White receives vs the #2 most-targeted group
+  const victimPairs = Object.entries(victimTotals).sort((a,b) => b[1].inter - a[1].inter);
+  const victimSecond = victimPairs[1] || ['—', {inter: 0}];
+  const victimSecondRace = victimSecond[0];
+  const victimSecondN = victimSecond[1].inter;
+  const whiteLeadPct = victimSecondN > 0 ? ((wt.inter / victimSecondN - 1) * 100).toFixed(0) : '—';
   const victimR1 = combos.filter(c=>c.victimRank[0]==='White').length;
   const victimR2 = combos.filter(c=>c.victimRank[1]==='White').length;
   const suspR1 = combos.filter(c=>c.suspectRank[0]==='Black').length;
@@ -6824,7 +6849,11 @@ function renderPattern() {
         </div>
         <div style="text-align:center;">
           <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--accent-red);text-shadow:0 0 24px rgba(230,57,70,0.4);">${wPct}%</div>
-          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">INTERRACIAL RATE</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">BY NON-WHITE SUSPECT</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:#ffd60a;text-shadow:0 0 24px rgba(255,214,10,0.4);">+${whiteLeadPct}%</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">MORE THAN #2 (${raceLabel(victimSecondRace).toUpperCase()})</div>
         </div>
       </div>
       <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
