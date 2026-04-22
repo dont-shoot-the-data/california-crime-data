@@ -35,7 +35,6 @@ body {
   color: var(--text-primary);
   font-family: 'DM Sans', sans-serif;
   overflow-x: hidden;
-  max-width: 100vw;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -290,6 +289,7 @@ section[id] { scroll-margin-top: 70px; }
   color: var(--accent-red);
   border: 2px solid rgba(230,57,70,0.6);
   padding: 12px 28px;
+  margin-top: auto;
   margin-bottom: 40px;
   position: relative;
   transform: rotate(-2.5deg);
@@ -422,7 +422,7 @@ section[id] { scroll-margin-top: 70px; }
   animation: fadeIn 1s ease 1.4s both;
 }
 
-.hero-stat { text-align: center; }
+.hero-stat { text-align: center; min-width: 125px; }
 
 .hero-stat-num {
   font-family: 'Source Code Pro', monospace;
@@ -439,11 +439,13 @@ section[id] { scroll-margin-top: 70px; }
   margin-top: 4px;
 }
 
+.scroll-indicator-wrap {
+  margin-top: auto;
+  width: 40px;
+  height: 40px;
+  animation: fadeIn 1s ease 1.8s both;
+}
 .scroll-indicator {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,7 +453,7 @@ section[id] { scroll-margin-top: 70px; }
   height: 40px;
   border: 1px solid var(--border);
   border-radius: 50%;
-  animation: fadeIn 1s ease 1.8s both, bounce 2.5s ease infinite 2.8s;
+  animation: bounce 2.5s ease infinite 2.8s;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -607,6 +609,7 @@ section[id] { scroll-margin-top: 70px; }
   align-items: center;
   box-sizing: border-box;
   gap: 0;
+  scroll-margin-top: 70px;
 }
 
 .section-header {
@@ -2205,10 +2208,38 @@ section[id] { scroll-margin-top: 70px; }
 .statewide-crime-toggle .state-toggle-btn {
   border-radius: 4px !important;
   border-left: 1px solid var(--border) !important;
+  display: inline-flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  line-height: 1.2;
 }
 .statewide-crime-toggle .state-toggle-btn.active {
   border-color: var(--accent-red) !important;
   border-left-color: var(--accent-red) !important;
+}
+.statewide-crime-toggle .state-toggle-btn.disabled-crime {
+  opacity: 0.55;
+  color: var(--text-muted) !important;
+  font-style: italic;
+  pointer-events: none;
+}
+.statewide-crime-toggle .state-toggle-btn.disabled-crime.active {
+  opacity: 0.75;
+  border-color: var(--text-secondary) !important;
+  border-left-color: var(--text-secondary) !important;
+}
+.statewide-crime-toggle .state-toggle-btn .crime-denied-note {
+  display: block;
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--accent-red);
+  opacity: 0.65;
+  margin-top: 2px;
+  text-transform: uppercase;
 }
 
 @media (max-width: 720px) {
@@ -2398,7 +2429,7 @@ section[id] { scroll-margin-top: 70px; }
   .hero-stat-num { font-size: 22px; }
   .hero-stat-label { font-size: 9px; letter-spacing: 1.5px; }
   .hero-subtitle { margin-top: 18px; }
-  .scroll-indicator { bottom: 24px; }
+  .hero-stat { min-width: 100px; }
   .statewide-section { padding: 16px 12px; }
   .city-details { padding: 16px 12px; }
   .transparency-section { padding: 16px 12px; }
@@ -3747,6 +3778,7 @@ section[id] { scroll-margin-top: 70px; }
   display: flex;
   flex-direction: column;
   justify-content: center;
+  scroll-margin-top: 70px;
 }
 .why-lede {
   font-family: 'Source Code Pro', monospace;
@@ -3793,11 +3825,59 @@ section[id] { scroll-margin-top: 70px; }
   font-weight: 700;
   line-height: 1.5;
 }
+/* Alert-style subtitle with pulsing red glow + italic kicker */
+.why-subtitle-alert {
+  color: var(--text-secondary);
+  letter-spacing: 1.5px;
+}
+.why-alert-main {
+  animation: whyAlertPulse 2.4s ease-in-out infinite;
+}
+@keyframes whyAlertPulse {
+  0%, 100% {
+    color: var(--text-secondary);
+    text-shadow: 0 0 0 transparent;
+  }
+  50% {
+    color: #ff5a67;
+    text-shadow: 0 0 14px rgba(230,57,70,0.55);
+  }
+}
+.why-alert-kicker {
+  font-style: italic;
+  color: var(--accent-red);
+  margin-left: 6px;
+  letter-spacing: 1px;
+  text-transform: none;
+  font-size: 12px;
+  text-shadow: 0 0 8px rgba(230,57,70,0.35);
+}
 .why-divider {
   width: 50px;
   height: 1px;
   background: var(--border);
   margin: 12px auto;
+}
+.why-examples {
+  font-family: 'Source Code Pro', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 760px;
+  margin: 6px auto 0;
+  line-height: 1.7;
+  font-style: italic;
+  opacity: 0.75;
+}
+.why-examples-label {
+  font-style: normal;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-size: 10px;
+  margin-right: 6px;
 }
 
 /* The data-reveal card */
@@ -3813,12 +3893,12 @@ section[id] { scroll-margin-top: 70px; }
 }
 .why-reveal-label {
   font-family: 'Source Code Pro', monospace;
-  font-size: 10px;
-  letter-spacing: 2px;
+  font-size: 12px;
+  letter-spacing: 2.2px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-primary);
   text-align: center;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   font-weight: 700;
 }
 .why-reveal-title {
@@ -3898,6 +3978,12 @@ section[id] { scroll-margin-top: 70px; }
   font-family: 'Source Code Pro', monospace;
   font-size: 11px;
 }
+.why-bar-row.small-bar {
+  position: relative;
+}
+.why-bar-row.small-bar .why-bar-track {
+  flex: 1;
+}
 .why-bar-label {
   width: 58px;
   flex-shrink: 0;
@@ -3928,6 +4014,43 @@ section[id] { scroll-margin-top: 70px; }
   font-size: 9px;
   letter-spacing: 0.3px;
   text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+/* For very small bars: empty fill + external callout inside the track */
+.why-bar-row.small-bar .why-bar-track {
+  overflow: visible;
+}
+.why-bar-external {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 8px;
+  opacity: 0;
+  transition: left 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease 0.9s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: 'Source Code Pro', monospace;
+  font-weight: 800;
+  font-size: 10px;
+  color: var(--text-primary);
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.why-bar-external::before {
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-right: 5px solid var(--text-primary);
+  opacity: 0.7;
+}
+.why-reveal.visible .why-bar-external {
+  left: var(--w);
+  opacity: 1;
 }
 .why-reveal.visible .why-bar-fill {
   width: var(--w);
@@ -4003,41 +4126,69 @@ section[id] { scroll-margin-top: 70px; }
   stroke: var(--accent-red);
 }
 
+/* In-column mobile header (pill-style, appears only on small screens) */
+.why-col-mobile-head {
+  display: none;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 9px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-align: center;
+  padding: 5px 8px;
+  border-radius: 4px;
+  margin: -4px -4px 8px -4px;
+  line-height: 1.3;
+}
+
 /* MEDIUM-SCREEN / TABLET: keep 3-up but compact */
 @media (max-width: 900px) {
   .why-bar-label { width: 48px; font-size: 9px; }
   .why-reveal-pill { font-size: 9px; letter-spacing: 0.8px; padding: 5px 6px; }
 }
 
-/* MOBILE (<=640px): compress HARD, keep 3-up since each chart is small,
-   use single column for cleaner read but still fit in one screen */
+/* MOBILE (<=640px): stack as single column, pair each pill with its chart */
 @media (max-width: 640px) {
   .why-section { padding: 8px 10px 10px; }
   .why-lede { font-size: 8.5px; letter-spacing: 1.8px; margin-bottom: 2px; }
   .why-title { font-size: 17px; line-height: 1.15; }
   .why-subtitle { font-size: 9px; letter-spacing: 0.8px; margin-bottom: 6px; }
+  .why-alert-kicker { display: none; }
   .why-divider { margin: 8px auto; }
   .why-reveal { padding: 10px 10px 8px; }
   .why-reveal-title { font-size: 13px; margin-bottom: 2px; }
-  .why-reveal-label { font-size: 8.5px; margin-bottom: 8px; letter-spacing: 1.2px; }
-  .why-reveal-pills { grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-bottom: 6px; }
-  .why-reveal-pill { font-size: 7.5px; letter-spacing: 0.3px; padding: 4px 2px; line-height: 1.15; }
-  .why-reveal-grid, .why-reveal-grid-3 { grid-template-columns: 1fr 1fr 1fr; gap: 4px; }
-  .why-reveal-col { padding: 5px 5px 4px; }
-  .why-bar-row { gap: 4px; margin-bottom: 3px; }
-  .why-bar-label { width: 38px; font-size: 8px; letter-spacing: 0.2px; }
-  .why-bar-fill { font-size: 7.5px; padding-right: 3px; }
-  .why-bar-track { height: 13px; }
-  .why-source-link { font-size: 8px; margin-top: 6px; }
+  .why-reveal-label { font-size: 8.5px; margin-bottom: 10px; letter-spacing: 1.2px; }
+  /* Hide the desktop pill row on mobile — pills are now in-column */
+  .why-reveal-pills { display: none; }
+  /* Show in-column mobile pill headers */
+  .why-col-mobile-head { display: block; }
+  /* Stack cols vertically so each pill sits with its chart */
+  .why-reveal-grid, .why-reveal-grid-3 { grid-template-columns: 1fr; gap: 8px; }
+  .why-reveal-col { padding: 8px 8px 6px; }
+  .why-bar-row { gap: 6px; margin-bottom: 4px; }
+  .why-bar-label { width: 62px; font-size: 10px; letter-spacing: 0.3px; }
+  .why-bar-fill { font-size: 9px; padding-right: 5px; }
+  .why-bar-track { height: 15px; }
+  .why-source-link { font-size: 9px; margin-top: 8px; }
   .why-ominous { margin-top: 10px; gap: 4px; }
   .why-ominous-text { font-size: 9px; letter-spacing: 1px; }
-  .why-ominous-arrow svg { width: 24px; height: 24px; }
 }
 
-/* VERY NARROW (<=420px) — force single column, still one screen */
-@media (max-width: 420px) {
-  .why-reveal-pills { grid-template-columns: 1fr; gap: 3px; }
-  .why-reveal-grid, .why-reveal-grid-3 { grid-template-columns: 1fr; gap: 3px; }
+/* Column-specific mobile pill styling — matches desktop pills */
+.why-col-mobile-head.pill-fbi {
+  color: var(--accent-red);
+  background: linear-gradient(180deg, rgba(230,57,70,0.15) 0%, rgba(230,57,70,0.05) 100%);
+  border: 1px solid rgba(230,57,70,0.45);
+}
+.why-col-mobile-head.pill-ca {
+  color: #4ea8de;
+  background: linear-gradient(180deg, rgba(78,168,222,0.15) 0%, rgba(78,168,222,0.05) 100%);
+  border: 1px solid rgba(78,168,222,0.45);
+}
+.why-col-mobile-head.pill-pop {
+  color: #e8d44d;
+  background: linear-gradient(180deg, rgba(232,212,77,0.15) 0%, rgba(232,212,77,0.05) 100%);
+  border: 1px solid rgba(232,212,77,0.45);
 }
 
 </style>
@@ -4098,8 +4249,10 @@ section[id] { scroll-margin-top: 70px; }
       <div class="hero-stat-label">Cities Requested</div>
     </div>
   </div>
-  <div class="scroll-indicator" onclick="document.getElementById('whyThis').scrollIntoView({behavior:'smooth'})">
-    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+  <div class="scroll-indicator-wrap">
+    <div class="scroll-indicator" onclick="document.getElementById('whyThis').scrollIntoView({behavior:'smooth'})">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
+    </div>
   </div>
 </section>
 
@@ -4107,26 +4260,32 @@ section[id] { scroll-margin-top: 70px; }
 <section class="why-section" id="whyThis">
   <div class="why-lede reveal"><span class="why-lede-pulse"></span>Why This Investigation Exists</div>
   <h2 class="why-title reveal">No one knows which race is attacking who, and how much.</h2>
+  <div class="why-examples reveal">
+    <span class="why-examples-label">Examples:</span> How many Whites kidnapped Hispanics in San Jose? How many Blacks killed Whites in Sacramento?
+  </div>
 
   <div class="why-divider reveal"></div>
 
   <div class="why-lede reveal">A second problem</div>
   <h2 class="why-title reveal" style="font-size:clamp(22px, 3.4vw, 32px);">Why not just use the FBI data?</h2>
-  <div class="why-subtitle reveal" style="color:var(--text-secondary); font-size:11px;">The FBI counts White and Hispanic as one group</div>
+  <div class="why-subtitle why-subtitle-alert reveal">
+    <span class="why-alert-main">The FBI counts Hispanic as White</span><span class="why-alert-kicker">&mdash; yes, really.</span>
+  </div>
 
   <div class="why-reveal reveal" id="whyRevealCard">
-    <div class="why-reveal-title">What the FBI shows vs. what the numbers actually say</div>
-    <div class="why-reveal-label">California homicide offenders</div>
+    <div class="why-reveal-title">FBI data vs. The Truth</div>
+    <div class="why-reveal-label">California homicide arrests &middot; 2024</div>
 
     <div class="why-reveal-pills">
-      <div class="why-reveal-pill pill-fbi">Source: FBI</div>
-      <div class="why-reveal-pill pill-ca">The actual California data</div>
+      <div class="why-reveal-pill pill-fbi">What the FBI shows</div>
+      <div class="why-reveal-pill pill-ca">The real California data</div>
       <div class="why-reveal-pill pill-pop">California population</div>
     </div>
 
     <div class="why-reveal-grid why-reveal-grid-3">
       <!-- FBI RACE TAB -->
       <div class="why-reveal-col fbi-col">
+        <div class="why-col-mobile-head pill-fbi">What the FBI shows</div>
         <div class="why-bar-row">
           <div class="why-bar-label" style="color:#4ea8de;">White</div>
           <div class="why-bar-track">
@@ -4139,73 +4298,77 @@ section[id] { scroll-margin-top: 70px; }
             <div class="why-bar-fill" style="background:#c840e9; --w: 44.9%;">335</div>
           </div>
         </div>
-        <div class="why-bar-row">
+        <div class="why-bar-row small-bar" style="--w: 6.2%;">
           <div class="why-bar-label" style="color:#e8d44d;">Asian</div>
           <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#e8d44d; color:#1a1a24; text-shadow:none; --w: 6.2%;">46</div>
+            <div class="why-bar-fill" style="background:#e8d44d;"></div>
+            <div class="why-bar-external">46</div>
           </div>
         </div>
       </div>
 
-      <!-- ACTUAL (race x ethnicity) -->
+      <!-- ACTUAL (real CA AG Table 31 data, 2024) -->
       <div class="why-reveal-col ca-col">
+        <div class="why-col-mobile-head pill-ca">The real California data</div>
         <div class="why-bar-row">
           <div class="why-bar-label" style="color:#e8853a;">Hispanic</div>
           <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#e8853a; --w: 49.2%;">367</div>
-          </div>
-        </div>
-        <div class="why-bar-row">
-          <div class="why-bar-label" style="color:#4ea8de;">White<br><span style="font-size:8px;opacity:0.7;">(non-Hisp)</span></div>
-          <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#4ea8de; --w: 50.8%;">~379</div>
+            <div class="why-bar-fill" style="background:#e8853a; --w: 84.3%;">629</div>
           </div>
         </div>
         <div class="why-bar-row">
           <div class="why-bar-label" style="color:#c840e9;">Black</div>
           <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#c840e9; --w: 44.9%;">335</div>
+            <div class="why-bar-fill" style="background:#c840e9; --w: 52.1%;">389</div>
           </div>
         </div>
         <div class="why-bar-row">
-          <div class="why-bar-label" style="color:#e8d44d;">Asian</div>
+          <div class="why-bar-label" style="color:#4ea8de;">White</div>
           <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#e8d44d; color:#1a1a24; text-shadow:none; --w: 6.2%;">46</div>
+            <div class="why-bar-fill" style="background:#4ea8de; --w: 28.4%;">212</div>
+          </div>
+        </div>
+        <div class="why-bar-row small-bar" style="--w: 10.1%;">
+          <div class="why-bar-label" style="color:#e8d44d;">Other</div>
+          <div class="why-bar-track">
+            <div class="why-bar-fill" style="background:#e8d44d;"></div>
+            <div class="why-bar-external">75</div>
           </div>
         </div>
       </div>
 
       <!-- CALIFORNIA POPULATION FOR REFERENCE -->
       <div class="why-reveal-col pop-col">
-        <div class="why-bar-row">
-          <div class="why-bar-label" style="color:#4ea8de;">White</div>
-          <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#4ea8de; --w: 100%;">40%</div>
-          </div>
-        </div>
+        <div class="why-col-mobile-head pill-pop">California population</div>
         <div class="why-bar-row">
           <div class="why-bar-label" style="color:#e8853a;">Hispanic</div>
           <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#e8853a; --w: 92.5%;">37%</div>
+            <div class="why-bar-fill" style="background:#e8853a; --w: 100%;">41%</div>
+          </div>
+        </div>
+        <div class="why-bar-row">
+          <div class="why-bar-label" style="color:#4ea8de;">White</div>
+          <div class="why-bar-track">
+            <div class="why-bar-fill" style="background:#4ea8de; --w: 82.9%;">34%</div>
           </div>
         </div>
         <div class="why-bar-row">
           <div class="why-bar-label" style="color:#e8d44d;">Asian</div>
           <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#e8d44d; color:#1a1a24; text-shadow:none; --w: 42.5%;">17%</div>
+            <div class="why-bar-fill" style="background:#e8d44d; color:#1a1a24; text-shadow:none; --w: 41.5%;">17%</div>
           </div>
         </div>
         <div class="why-bar-row">
           <div class="why-bar-label" style="color:#c840e9;">Black</div>
           <div class="why-bar-track">
-            <div class="why-bar-fill" style="background:#c840e9; --w: 15%;">6%</div>
+            <div class="why-bar-fill" style="background:#c840e9; --w: 12.2%;">5%</div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="why-source-link">
-      Source: <a href="https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/explorer/crime/crime-trend" target="_blank" rel="noopener">FBI Crime Data Explorer &rarr;</a>
+      Sources: <a href="https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/explorer/crime/crime-trend" target="_blank" rel="noopener">FBI Crime Data Explorer</a> &middot; <a href="https://oag.ca.gov/crime/cjsc/stats/crimes-clearances" target="_blank" rel="noopener">CA AG &ldquo;Crime in California&rdquo; Table 31</a>
     </div>
   </div>
 
@@ -4227,7 +4390,8 @@ section[id] { scroll-margin-top: 70px; }
 <section class="map-section" id="map">
   <div class="section-header reveal" style="margin-bottom:20px;">
     <div class="section-title" style="font-size:clamp(24px,3.5vw,36px);margin-bottom:2px;">Explore by City</div>
-    <div class="section-desc" style="margin-top:4px;font-size:14px;">Hover over a city to preview its data.</div>
+    <div class="section-desc" style="margin-top:4px;font-size:14px;max-width:680px;margin-left:auto;margin-right:auto;">We chose California&rsquo;s 10 most populated cities to understand interracial crime across the state.</div>
+    <div class="section-desc" style="margin-top:10px;font-size:12px;opacity:0.6;font-style:italic;">Hover over a city to preview its data.</div>
   </div>
 
   <div class="map-container ca-animated" id="caMapContainer">
@@ -4357,13 +4521,7 @@ section[id] { scroll-margin-top: 70px; }
     <div class="section-header reveal">
       <div class="section-label">California Attorney General Data</div>
       <div class="section-title">Statewide Felony Arrests</div>
-      <div style="display:flex; justify-content:center; margin-bottom:12px;">
-        <div class="statewide-year-badge" style="display:inline-block; font-family:'Source Code Pro',monospace; font-size:11px; font-weight:700; color:#fff; background:var(--accent-red); padding:4px 14px; border-radius:3px; letter-spacing:1.5px; transform:rotate(-2deg) scale(0); box-shadow:0 2px 8px rgba(230,57,70,0.3); opacity:0;">2000 – 2024</div>
-      </div>
-      <div style="display:flex; justify-content:center; margin-bottom:8px;">
-        <div class="city-date-duration" id="statewideDurationTypewriter" style="font-size:12px;">24 years of data</div>
-      </div>
-      <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin-top:16px;">
+      <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin-top:20px;">
         <button class="state-toggle-btn state-crime-btn active" data-crime="homicide"   onclick="switchStatewideCrime('homicide')">Homicide</button>
         <button class="state-toggle-btn state-crime-btn"        data-crime="rape"       onclick="switchStatewideCrime('rape')">Rape</button>
         <button class="state-toggle-btn state-crime-btn"        data-crime="robbery"    onclick="switchStatewideCrime('robbery')">Robbery</button>
@@ -4379,17 +4537,6 @@ section[id] { scroll-margin-top: 70px; }
       <div class="section-header" style="margin-bottom: 20px;">
         <div class="section-label">Disproportionality</div>
         <div class="section-title" style="font-size: clamp(22px, 3vw, 32px);">Average Population Share vs. Average Arrest Share</div>
-        <div class="section-desc">24-year averages (2000–2024).</div>
-      </div>
-      <div style="text-align:center;margin-bottom:16px;">
-        <div style="font-family:'Source Code Pro',monospace;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);">California Population by Race</div>
-        <div style="font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.5px;margin-top:2px;">Average share · 2000–2024</div>
-        <div style="display:flex;justify-content:center;gap:14px;margin-top:8px;flex-wrap:wrap;">
-          <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--white);">White 40%</span>
-          <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--hispanic);">Hispanic 37%</span>
-          <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--other);">Other 17%</span>
-          <span style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--black);">Black 6%</span>
-        </div>
       </div>
       <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin:0 auto 16px;">
         <button class="state-toggle-btn state-crime-btn active" data-crime-local="homicide"   onclick="switchStatewideCrime('homicide')">Homicide</button>
@@ -6046,6 +6193,22 @@ let currentCity = 'sacramento';
 let currentView = 'city';
 let currentCrime = 'homicide';
 
+// Returns a small italic note listing which crimes are unavailable (PRR denied)
+// for the given city, or an empty string if the city has all crimes. Rendered
+// below disabled crime toggle rows so users understand why certain buttons
+// can't be clicked.
+function buildPendingCrimesNote(city) {
+  if (!city || !city.crimes) return '';
+  const pendingLabels = Object.entries(city.crimes)
+    .filter(([, cv]) => cv.pending)
+    .map(([, cv]) => cv.label);
+  if (pendingLabels.length === 0) return '';
+  const joined = pendingLabels.length === 1
+    ? pendingLabels[0]
+    : pendingLabels.slice(0, -1).join(', ') + ', and ' + pendingLabels[pendingLabels.length - 1];
+  return `<div class="pending-crime-note" style="text-align:center; margin:-8px auto 14px; max-width:600px; font-family:'Source Code Pro',monospace; font-size:10.5px; color:var(--text-muted); letter-spacing:0.5px; font-style:italic;">${joined}: PRR denied for ${city.name}</div>`;
+}
+
 function switchView(view) {
   currentView = view;
   document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.view === view));
@@ -6065,6 +6228,15 @@ function switchView(view) {
 
 function switchCity(cityId) {
   currentCity = cityId;
+  // If the target city doesn't have the currently-selected crime as real data
+  // (either missing entirely or marked pending), reset to Homicide so the user
+  // doesn't land on a PRR-denied card. Sacramento and San José have all four
+  // crimes; everyone else has only Homicide.
+  const target = cityData[cityId];
+  if (target && target.crimes && (!target.crimes[currentCityCrime] || target.crimes[currentCityCrime].pending)) {
+    currentCityCrime = 'homicide';
+    cityDisproCrime = 'homicide';
+  }
   document.querySelectorAll('#cityTabs .city-tab').forEach(tab => {
     tab.classList.toggle('active', tab.dataset.city === cityId);
   });
@@ -6087,8 +6259,25 @@ let currentCityCrime = 'homicide';
 function switchCityCrime(crimeKey) {
   currentCityCrime = crimeKey;
   cityDisproCrime = crimeKey;
-  // Full re-render of the city detail section so the interracial chart AND the dispro card both update
   renderCityDetail(currentCity);
+}
+
+// Switch city from the dispro city-selector row. Auto-switches to Homicide if
+// the target city doesn't have the currently-selected crime (LA case).
+function switchCityFromDispro(cityId) {
+  const city = cityData[cityId];
+  if (city && city.crimes && (!city.crimes[currentCityCrime] || city.crimes[currentCityCrime].pending)) {
+    const firstReal = Object.keys(city.crimes).find(k => !city.crimes[k].pending) || 'homicide';
+    currentCityCrime = firstReal;
+    cityDisproCrime = firstReal;
+  }
+  // Keep the top city-tab row in sync
+  document.querySelectorAll('#cityTabs .city-tab').forEach(tab => {
+    tab.classList.toggle('active', tab.dataset.city === cityId);
+  });
+  currentCity = cityId;
+  renderCityDetail(cityId);
+  setTimeout(() => setupTrendTooltips(), 100);
 }
 
 function renderCityDisproCard(cityId, crimeKey) {
@@ -6148,9 +6337,19 @@ function renderCityDisproCard(cityId, crimeKey) {
       </div>
     `;
   }).join('');
+  const stampKey = `dispro_${cityId}_${crimeKey}`;
   return `
     <div class="comparison-card">
-      <div class="comparison-card-title">${crime.label}</div>
+      <div style="text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+        <div style="font-family:'Playfair Display',serif; font-size:clamp(19px,2.4vw,24px); font-weight:700; color:var(--text-primary); letter-spacing:1.2px;">${city.name.toUpperCase()}</div>
+        <div style="margin-top:10px; display:inline-flex; align-items:flex-start; gap:14px; flex-wrap:wrap; justify-content:center;">
+          <div class="city-date-value" style="font-size:14px; letter-spacing:1px;">${crime.period || city.period}</div>
+          <div class="city-date-duration" style="font-size:11px; margin-top:0;">${((crime.duration || city.duration) || '').replace(' of data','')}</div>
+        </div>
+        <div class="vc-crime-stamp-wrap" style="margin-top:14px;">
+          <div class="vc-crime-stamp" data-dispro-stamp="${stampKey}">${crime.label}</div>
+        </div>
+      </div>
       ${rows}
     </div>
   `;
@@ -6221,9 +6420,11 @@ function renderCityDetail(cityId) {
             <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin:0 auto 18px;">
               ${Object.entries(city.crimes).map(([ck, cv]) => {
                 const isActive = ck === currentCityCrime;
-                return `<button class="state-toggle-btn state-crime-btn${isActive ? ' active' : ''}" data-city-crime="${ck}" onclick="switchCityCrime('${ck}')">${cv.label}${cv.pending ? ' *' : ''}</button>`;
+                const pending = !!cv.pending;
+                return `<button class="state-toggle-btn state-crime-btn${isActive ? ' active' : ''}${pending ? ' disabled-crime' : ''}" data-city-crime="${ck}"${pending ? ' aria-disabled="true" title="PRR denied for this crime"' : ` onclick="switchCityCrime('${ck}')"`}>${cv.label}${pending ? '<span class="crime-denied-note">PRR denied</span>' : ''}</button>`;
               }).join('')}
             </div>
+            ${buildPendingCrimesNote(city)}
           `;
           return `
             ${pendingToggleHTML}
@@ -6285,7 +6486,25 @@ function renderCityDetail(cityId) {
           };
           const targetedHTML = buildStrip('most interracially targeted', targetedRanked, '') +
                                buildStrip('biggest interracial cause', causeRanked, 'vc-cause');
-          barsHTML = buildFlatInterracial(crime, city, dtSingular) + targetedHTML;
+          // City population strip in chart race order
+          const popOrder = raceKeysDet.slice().sort((a, b) => (crime.byRace[b] || 0) - (crime.byRace[a] || 0));
+          const cityPopStrip = `
+            <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border); text-align:center;">
+              <div style="font-family:'Source Code Pro',monospace; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px;">
+                ${city.name} population by race
+              </div>
+              <div style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center; font-family:'Source Code Pro',monospace; font-size:12px;">
+                ${popOrder.map(race => `
+                  <span style="display:inline-flex; align-items:center; gap:6px;">
+                    <span style="width:8px; height:8px; border-radius:50%; background:${raceColors[race]}; box-shadow:0 0 6px ${raceColors[race]}66;"></span>
+                    <span style="color:${raceColors[race]}; font-weight:700;">${raceLabel(race)}</span>
+                    <span style="color:var(--text-primary); font-weight:700;">${city.population[race]}%</span>
+                  </span>
+                `).join('')}
+              </div>
+            </div>
+          `;
+          barsHTML = targetedHTML + buildFlatInterracial(crime, city, dtSingular) + cityPopStrip;
         } else {
           // No cross-tab data — compact vertical paired bars (arrest % vs population %)
           const maxPct = Math.max(
@@ -6379,9 +6598,11 @@ function renderCityDetail(cityId) {
             <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin:0 auto 18px;">
               ${Object.entries(city.crimes).map(([ck, cv]) => {
                 const isActive = ck === currentCityCrime;
-                return `<button class="state-toggle-btn state-crime-btn${isActive ? ' active' : ''}" data-city-crime="${ck}" onclick="switchCityCrime('${ck}')">${cv.label}${cv.pending ? ' *' : ''}</button>`;
+                const pending = !!cv.pending;
+                return `<button class="state-toggle-btn state-crime-btn${isActive ? ' active' : ''}${pending ? ' disabled-crime' : ''}" data-city-crime="${ck}"${pending ? ' aria-disabled="true" title="PRR denied for this crime"' : ` onclick="switchCityCrime('${ck}')"`}>${cv.label}${pending ? '<span class="crime-denied-note">PRR denied</span>' : ''}</button>`;
               }).join('')}
             </div>
+            ${buildPendingCrimesNote(city)}
             <div class="vc-crime-stamp-wrap">
               <div class="vc-crime-stamp" data-card-stamp="${cardKey}">${crime.label} ${city.dataType}</div>
             </div>
@@ -6420,8 +6641,29 @@ function renderCityDetail(cityId) {
       <div class="section-header" style="margin-bottom: 20px;">
         <div class="section-label">Disproportionality</div>
         <div class="section-title" style="font-size: clamp(18px, 2.5vw, 26px);">Population Share vs. ${city.dataType} Share</div>
-        <div class="section-desc">${city.name} · ${city.period}</div>
       </div>
+      <!-- City selector (cities with 16-bar cross-tab data; LA uses a different
+           chart structure and is accessed via the main city tabs above) -->
+      <div class="city-tabs" style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;max-width:700px;margin:0 auto 12px;">
+        ${[
+          ['sacramento','Sacramento'],
+          ['san_jose','San José'],
+          ['san_francisco','San Francisco'],
+          ['oakland','Oakland'],
+          ['san_diego','San Diego']
+        ].map(([cid,cname]) => {
+          const active = cid === cityId;
+          return `<button class="city-tab${active?' active':''}" data-dispro-city="${cid}" onclick="switchCityFromDispro('${cid}')">${cname}</button>`;
+        }).join('')}
+      </div>
+      <div class="statewide-toggle statewide-crime-toggle" style="display:flex; flex-wrap:wrap; justify-content:center; gap:0; margin:0 auto 18px;">
+        ${Object.entries(city.crimes).map(([ck, cv]) => {
+          const isActive = ck === currentCityCrime;
+          const pending = !!cv.pending;
+          return `<button class="state-toggle-btn state-crime-btn${isActive ? ' active' : ''}${pending ? ' disabled-crime' : ''}" data-city-crime-dispro="${ck}"${pending ? ' aria-disabled="true" title="PRR denied for this crime"' : ` onclick="switchCityCrime('${ck}')"`}>${cv.label}${pending ? '<span class="crime-denied-note">PRR denied</span>' : ''}</button>`;
+        }).join('')}
+      </div>
+      ${buildPendingCrimesNote(city)}
       <div class="comparison-grid" id="cityDisproGrid">
         ${renderCityDisproCard(cityId, currentCityCrime)}
       </div>
@@ -6458,6 +6700,22 @@ function renderCityDetail(cityId) {
       });
     }, { threshold: 0.25 });
     cardStamps.forEach(s => cardObserver.observe(s));
+    // Dispro-card stamp observer (city dispro: data-dispro-stamp)
+    const disproStamps = container.querySelectorAll('.vc-crime-stamp[data-dispro-stamp]');
+    const disproObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const stamp = entry.target;
+        if (entry.isIntersecting) {
+          // Re-trigger animation if re-entering
+          stamp.classList.remove('slammed');
+          void stamp.offsetWidth;
+          stamp.classList.add('slammed');
+        } else {
+          stamp.classList.remove('slammed');
+        }
+      });
+    }, { threshold: 0.3 });
+    disproStamps.forEach(s => disproObserver.observe(s));
     // Trigger typewriter animation on date (skip on initial render)
     if (!window._skipTypewriter) {
       const dateEl = document.getElementById('cityDateTypewriter');
@@ -6537,6 +6795,25 @@ function renderCrimeDetail(crimeKey) {
         const races = Object.keys(city.population);
         let headerStrips = '';
         let chartHTML = '';
+
+        // City population strip — always built, displayed below chart
+        const popOrder = races.slice().sort((a, b) => (crime.byRace[b] || 0) - (crime.byRace[a] || 0));
+        const cityPopStrip = `
+          <div style="margin-top:18px; padding-top:14px; border-top:1px solid var(--border); text-align:center;">
+            <div style="font-family:'Source Code Pro',monospace; font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px;">
+              ${cityDisplayNames[cityId]} population by race
+            </div>
+            <div style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center; font-family:'Source Code Pro',monospace; font-size:12px;">
+              ${popOrder.map(race => `
+                <span style="display:inline-flex; align-items:center; gap:6px;">
+                  <span style="width:8px; height:8px; border-radius:50%; background:${raceColors[race]}; box-shadow:0 0 6px ${raceColors[race]}66;"></span>
+                  <span style="color:${raceColors[race]}; font-weight:700;">${raceLabel(race)}</span>
+                  <span style="color:var(--text-primary); font-weight:700;">${city.population[race]}%</span>
+                </span>
+              `).join('')}
+            </div>
+          </div>
+        `;
 
         if (crime.details) {
           const targetedRanked = races.map(v => {
@@ -6673,10 +6950,11 @@ function renderCrimeDetail(crimeKey) {
               </div>
             </div>
             ${clearanceNote}
+            ${headerStrips}
             <div style="margin-top:18px;">
               ${chartHTML}
-              ${headerStrips}
             </div>
+            ${cityPopStrip}
             ${unknownNote}
             ${noLinkNote}
             ${rateStrip}
@@ -7090,16 +7368,41 @@ function renderTrendCharts() {
       return '';
     }).join('');
     
-    const pctNote = mode === 'pct' ? `<div style="text-align:center; margin-top:2px; font-family:'Source Code Pro',monospace; font-size:7px; color:var(--text-muted); letter-spacing:0.5px;">DASHED LINES = AVG. POPULATION SHARE</div>` : '';
-    const rateNote = mode === 'rate' ? `<div style="text-align:center; margin-top:2px; font-family:'Source Code Pro',monospace; font-size:7px; color:var(--text-muted); letter-spacing:0.5px;">DASHED LINE = PROPORTIONAL (1.0×)</div>` : '';
+    const pctNote = mode === 'pct' ? `<div style="text-align:center; margin-top:10px; margin-bottom:4px; font-family:'Source Code Pro',monospace; font-size:8px; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase;">DASHED LINES = AVG. POPULATION SHARE</div>` : '';
+    const rateNote = mode === 'rate' ? `<div style="text-align:center; margin-top:10px; margin-bottom:4px; font-family:'Source Code Pro',monospace; font-size:8px; color:var(--text-muted); letter-spacing:1px; text-transform:uppercase;">DASHED LINE = PROPORTIONAL (1.0×)</div>` : '';
     
+    // Disproportionality strip for the active crime (chip row matching city dispro style)
+    const disproPairs = races.map(r => ({
+      race: r,
+      val: avgPop[r] > 0 ? (stateAvg[key][r] / avgPop[r]) : 0
+    })).sort((a, b) => b.val - a.val);
+    const rankClass = ['rank-high','rank-mid','rank-low','rank-low'];
+    const disproStrip = `
+      <div style="margin-top:4px; padding-top:10px;">
+        <div style="text-align:center; font-family:'Source Code Pro',monospace; font-size:8px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:8px;">Disproportionality</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-bottom:14px;">
+          ${disproPairs.map((p, i) => `
+            <span style="font-family:'Source Code Pro',monospace; font-size:10px; display:inline-flex; align-items:center; gap:6px; padding:4px 9px; border-radius:4px; background:rgba(255,255,255,0.02); border:1px solid var(--border);">
+              <span style="font-weight:700; color:${raceColors[p.race]};">${raceLabel(p.race)}</span>
+              <span class="disproportion-badge ${rankClass[i] || 'rank-low'}" style="padding:1px 6px; font-size:10px;">${p.val.toFixed(1)}×</span>
+            </span>
+          `).join('')}
+        </div>
+      </div>
+    `;
+    
+    const trendStampKey = `trend_${key}_${mode}`;
     return `
       <div class="trend-chart-card reveal visible stagger-${Object.keys(statewideRates).indexOf(key) % 4 + 1}">
         <div class="statewide-toggle" style="display:flex; justify-content:center; gap:0; margin:0 auto 14px;">
           <button class="state-toggle-btn${statewideMode==='rate'?' active':''}"   data-mode="rate"   onclick="switchStatewideView('rate')">Rate</button>
           <button class="state-toggle-btn${statewideMode==='counts'?' active':''}" data-mode="counts" onclick="switchStatewideView('counts')">Counts</button>
         </div>
-        <div class="trend-chart-title">${data.label} ${ml.title}</div>
+        <div style="font-family:'Playfair Display',serif; font-size:clamp(18px,2.3vw,22px); font-weight:700; color:var(--text-primary); letter-spacing:1.2px; text-align:center; margin-bottom:10px;">CALIFORNIA</div>
+        <div class="vc-crime-stamp-wrap">
+          <div class="vc-crime-stamp" data-dispro-stamp="${trendStampKey}">${data.label} ${ml.title}</div>
+        </div>
+        <div style="font-family:'Source Code Pro',monospace; font-size:11px; font-weight:600; color:var(--accent-red); letter-spacing:1.2px; text-align:center; margin-bottom:10px; opacity:0.85;">24 years of data</div>
         <div class="trend-chart-subtitle">${ml.sub}</div>
         <svg class="trend-svg" viewBox="0 0 ${svgW} ${svgH}">
           ${gridLines}
@@ -7107,7 +7410,9 @@ function renderTrendCharts() {
           ${xLabels}
           ${lines}
         </svg>
-        <div style="text-align:center; margin-top:12px; font-family:'Source Code Pro',monospace; font-size:9px; font-weight:700; color:var(--text-secondary); letter-spacing:1.5px; text-transform:uppercase;">Average California Population Share · 2000–2024</div>
+        ${pctNote}${rateNote}
+        ${disproStrip}
+        <div style="text-align:center; margin-top:8px; font-family:'Source Code Pro',monospace; font-size:9px; font-weight:700; color:var(--text-secondary); letter-spacing:1.5px; text-transform:uppercase;">Average California Population Share · 2000–2024</div>
         <div class="trend-legend">
           ${races.map(r => `
             <div class="trend-legend-item">
@@ -7117,10 +7422,31 @@ function renderTrendCharts() {
             </div>
           `).join('')}
         </div>
-        ${pctNote}${rateNote}
       </div>
     `;
   }).join('');
+  attachDisproStampObserver(container);
+}
+
+// Reusable: attaches IntersectionObserver to any .vc-crime-stamp[data-dispro-stamp] inside a container.
+// Re-triggers the slam animation every time the stamp enters view.
+function attachDisproStampObserver(root) {
+  if (!root) return;
+  const stamps = root.querySelectorAll('.vc-crime-stamp[data-dispro-stamp]');
+  if (!stamps.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const stamp = entry.target;
+      if (entry.isIntersecting) {
+        stamp.classList.remove('slammed');
+        void stamp.offsetWidth;
+        stamp.classList.add('slammed');
+      } else {
+        stamp.classList.remove('slammed');
+      }
+    });
+  }, { threshold: 0.3 });
+  stamps.forEach(s => obs.observe(s));
 }
 
 // ==================== COMPARISON BARS ====================
@@ -7140,7 +7466,16 @@ function renderComparison() {
     });
     return `
     <div class="comparison-card">
-      <div class="comparison-card-title">${labels[crime]}</div>
+      <div style="text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border);">
+        <div style="font-family:'Playfair Display',serif; font-size:clamp(19px,2.4vw,24px); font-weight:700; color:var(--text-primary); letter-spacing:1.2px;">CALIFORNIA</div>
+        <div style="margin-top:10px; display:inline-flex; align-items:flex-start; gap:14px; flex-wrap:wrap; justify-content:center;">
+          <div class="city-date-value" style="font-size:14px; letter-spacing:1px;">2000 – 2024</div>
+          <div class="city-date-duration" style="font-size:11px; margin-top:0;">24 years of data</div>
+        </div>
+        <div class="vc-crime-stamp-wrap" style="margin-top:14px;">
+          <div class="vc-crime-stamp" data-dispro-stamp="statewide_dispro_${crime}">${labels[crime]}</div>
+        </div>
+      </div>
       ${sortedRaces.map(race => {
         const pop = stateAvg.population[race];
         const arr = stateAvg[crime][race];
@@ -7180,6 +7515,7 @@ function renderComparison() {
     </div>
   `;
   }).join('');
+  attachDisproStampObserver(grid);
 }
 
 // ==================== TRANSPARENCY ====================
@@ -7232,10 +7568,15 @@ function renderPattern() {
   const victimTotals = {};
   const suspectTotals = {};
   const combos = [];
+  let blackOnWhite = 0; // attacks where suspect=Black AND victim=White (for Black-card stat 3)
   races.forEach(r => { victimTotals[r] = {total:0, inter:0}; suspectTotals[r] = {total:0, inter:0}; });
   Object.entries(cityData).forEach(([cityId, city]) => {
     Object.entries(city.crimes).forEach(([ck, crime]) => {
       if (!crime || crime.pending || !crime.details) return;
+      // Track Black -> White specifically
+      if (crime.details['Black'] && crime.details['Black']['White']) {
+        blackOnWhite += crime.details['Black']['White'];
+      }
       const pr = Object.keys(city.population);
       const victimRanked = pr.map(v => {
         let tot=0, inter=0;
@@ -7261,15 +7602,26 @@ function renderPattern() {
     });
   });
   const wt = victimTotals['White'];
-  const wPct = wt.total>0 ? (wt.inter/wt.total*100).toFixed(1) : '0';
   const bt = suspectTotals['Black'];
   const ht = suspectTotals['Hispanic'];
-  // Gap: how much more interracial victimization White receives vs the #2 most-targeted group
+  // WHITE CARD — delta to #2 most-targeted victim race (absolute count, not %)
   const victimPairs = Object.entries(victimTotals).sort((a,b) => b[1].inter - a[1].inter);
   const victimSecond = victimPairs[1] || ['—', {inter: 0}];
   const victimSecondRace = victimSecond[0];
   const victimSecondN = victimSecond[1].inter;
-  const whiteLeadPct = victimSecondN > 0 ? ((wt.inter / victimSecondN - 1) * 100).toFixed(0) : '—';
+  const whiteLeadAbs = wt.inter - victimSecondN;
+  // WHITE CARD — stat 3: of all interracial attacks committed by non-Whites,
+  // what share targeted White victims?
+  const nonWhiteSuspectInter = ['Black','Hispanic','Other'].reduce((a,r) => a + (suspectTotals[r]?.inter || 0), 0);
+  const whiteShareOfNonWhiteInter = nonWhiteSuspectInter > 0 ? (wt.inter / nonWhiteSuspectInter * 100).toFixed(1) : '—';
+  // BLACK CARD — delta to #2 most-perpetrating suspect race
+  const suspectPairs = Object.entries(suspectTotals).sort((a,b) => b[1].inter - a[1].inter);
+  const suspectSecond = suspectPairs[1] || ['—', {inter: 0}];
+  const suspectSecondRace = suspectSecond[0];
+  const suspectSecondN = suspectSecond[1].inter;
+  const blackLeadAbs = bt.inter - suspectSecondN;
+  // BLACK CARD — stat 3: of Black interracial attacks, what share targeted White?
+  const blackOnWhiteShare = bt.inter > 0 ? (blackOnWhite / bt.inter * 100).toFixed(1) : '—';
   const victimR1 = combos.filter(c=>c.victimRank[0]==='White').length;
   const victimR2 = combos.filter(c=>c.victimRank[1]==='White').length;
   const suspR1 = combos.filter(c=>c.suspectRank[0]==='Black').length;
@@ -7281,24 +7633,27 @@ function renderPattern() {
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--white),transparent);"></div>
       <div style="text-align:center;">
         <div style="font-family:'Source Code Pro',monospace;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-red);margin-bottom:6px;">Finding</div>
-        <div style="font-family:'Source Code Pro',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:4px;">#1 target of interracial violence in California</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:clamp(15px,1.8vw,20px);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-primary);margin-bottom:6px;">#1 target of interracial violence in California</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;font-style:italic;opacity:0.8;">(of the cities that responded to our public records requests)</div>
         <div style="font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,48px);color:var(--white);letter-spacing:2px;text-shadow:0 0 30px rgba(78,168,222,0.3);">White Californians</div>
       </div>
       <div style="display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin:24px 0 8px;">
         <div style="text-align:center;">
           <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--white);text-shadow:0 0 24px rgba(78,168,222,0.4);">${wt.inter.toLocaleString()}</div>
-          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">INTERRACIAL ATTACKS</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">INTERRACIAL ATTACKS ON WHITE</div>
         </div>
         <div style="text-align:center;">
-          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--accent-red);text-shadow:0 0 24px rgba(230,57,70,0.4);">${wPct}%</div>
-          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">BY NON-WHITE SUSPECT</div>
-        </div>
-        <div style="text-align:center;">
-          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:#ffd60a;text-shadow:0 0 24px rgba(255,214,10,0.4);">+${whiteLeadPct}%</div>
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:#ffd60a;text-shadow:0 0 24px rgba(255,214,10,0.4);">+${whiteLeadAbs.toLocaleString()}</div>
           <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">MORE THAN #2 (${raceLabel(victimSecondRace).toUpperCase()})</div>
         </div>
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--accent-red);text-shadow:0 0 24px rgba(230,57,70,0.4);">${whiteShareOfNonWhiteInter}%</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">OF INTERRACIAL ATTACKS TARGETED WHITE</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:8.5px;color:var(--text-muted);letter-spacing:0.5px;margin-top:3px;font-style:italic;opacity:0.75;">(excluding White interracial crime, obviously)</div>
+        </div>
       </div>
-      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:10px;font-weight:700;letter-spacing:3px;color:var(--text-secondary);margin:22px 0 10px;">INTERRACIALLY</div>
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:0 0 22px;">
         ${['MOST MURDERED','MOST RAPED','MOST ROBBED','MOST KIDNAPPED'].map(l => `<div class="pattern-stamp" style="display:inline-block;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#fff;background:var(--accent-red);padding:6px 16px;border-radius:3px;letter-spacing:1.8px;text-transform:uppercase;transform:scale(0);opacity:0;box-shadow:0 3px 10px rgba(230,57,70,0.35),inset 0 0 0 1px rgba(255,255,255,0.12);text-shadow:0 1px 2px rgba(0,0,0,0.4);">${l}</div>`).join('')}
       </div>
       <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-secondary);margin-bottom:6px;">#1 most interracially targeted across all four crime categories</div>
@@ -7316,20 +7671,28 @@ function renderPattern() {
       <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--black),transparent);"></div>
       <div style="text-align:center;">
         <div style="font-family:'Source Code Pro',monospace;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-red);margin-bottom:6px;">Finding</div>
-        <div style="font-family:'Source Code Pro',monospace;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--text-secondary);margin-bottom:4px;">#1 source of interracial violence in California</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:clamp(15px,1.8vw,20px);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-primary);margin-bottom:6px;">#1 source of interracial violence in California</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);letter-spacing:0.5px;margin-bottom:4px;font-style:italic;opacity:0.8;">(of the cities that responded to our public records requests)</div>
         <div style="font-family:'Playfair Display',serif;font-size:clamp(32px,5vw,48px);color:var(--black);letter-spacing:2px;text-shadow:0 0 30px rgba(200,64,233,0.3);">Black Californians</div>
       </div>
       <div style="display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin:24px 0 8px;">
         <div style="text-align:center;">
           <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--black);text-shadow:0 0 24px rgba(200,64,233,0.4);">${bt.inter.toLocaleString()}</div>
-          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">INTERRACIAL ATTACKS</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">INTERRACIAL ATTACKS BY BLACK SUSPECTS</div>
         </div>
         <div style="text-align:center;">
-          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--accent-red);text-shadow:0 0 24px rgba(230,57,70,0.4);">${suspR1}/${combos.length}</div>
-          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">RANKED #1</div>
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:#ffd60a;text-shadow:0 0 24px rgba(255,214,10,0.4);">+${blackLeadAbs.toLocaleString()}</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">MORE THAN #2 (${raceLabel(suspectSecondRace).toUpperCase()})</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:8.5px;color:var(--text-muted);letter-spacing:0.5px;margin-top:3px;font-style:italic;opacity:0.75;max-width:220px;margin-left:auto;margin-right:auto;line-height:1.4;">(Black Californians are only ~6% of the state's population)</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--accent-red);text-shadow:0 0 24px rgba(230,57,70,0.4);">${blackOnWhiteShare}%</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">OF BLACK INTERRACIAL ATTACKS TARGETED WHITE</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:8.5px;color:var(--text-muted);letter-spacing:0.5px;margin-top:3px;font-style:italic;opacity:0.75;max-width:220px;margin-left:auto;margin-right:auto;line-height:1.4;">(Whites are not California's largest group. Hispanics are.)</div>
         </div>
       </div>
-      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:18px 0 22px;">
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:10px;font-weight:700;letter-spacing:3px;color:var(--text-secondary);margin:22px 0 10px;">INTERRACIALLY</div>
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:0 0 22px;">
         ${['MOST MURDERING','MOST RAPING','MOST ROBBING','MOST KIDNAPPING'].map(l => `<div class="pattern-stamp" style="display:inline-block;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#fff;background:var(--accent-red);padding:6px 16px;border-radius:3px;letter-spacing:1.8px;text-transform:uppercase;transform:scale(0);opacity:0;box-shadow:0 3px 10px rgba(230,57,70,0.35),inset 0 0 0 1px rgba(255,255,255,0.12);text-shadow:0 1px 2px rgba(0,0,0,0.4);">${l}</div>`).join('')}
       </div>
       <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-secondary);margin:14px 0 6px;">#1 interracial perpetrator across all four crime categories</div>
@@ -7420,29 +7783,6 @@ function setupScrollAnimations() {
       });
     }, { threshold: 0.25 });
     caMapObs.observe(caMap);
-  }
-  
-  // Trigger statewide badge slam and duration typewriter every time section scrolls in
-  const swSection = document.getElementById('statewide');
-  if (swSection) {
-    const swObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const badge = document.querySelector('.statewide-year-badge');
-          if (badge) { badge.classList.remove('slammed'); void badge.offsetWidth; badge.classList.add('slammed'); }
-          setTimeout(() => {
-            const durEl = document.getElementById('statewideDurationTypewriter');
-            if (durEl) { durEl.classList.remove('typing'); void durEl.offsetWidth; durEl.classList.add('typing'); }
-          }, 600);
-        } else {
-          const badge = document.querySelector('.statewide-year-badge');
-          const durEl = document.getElementById('statewideDurationTypewriter');
-          if (badge) badge.classList.remove('slammed');
-          if (durEl) durEl.classList.remove('typing');
-        }
-      });
-    }, { threshold: 0.1 });
-    swObserver.observe(swSection);
   }
 }
 
