@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>California Race Crime — By the Numbers</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Code+Pro:wght@400;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<title>California Interracial Race Crime — By the Numbers</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Code+Pro:wght@400;600&family=DM+Sans:wght@400;500;600;700&family=Saira+Stencil+One&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 <style>
@@ -346,6 +346,97 @@ section[id] { scroll-margin-top: 70px; }
 .hero-title em {
   font-style: italic;
   color: var(--accent-red);
+}
+
+.hero-interracial {
+  display: inline-block;
+  font-family: 'Saira Stencil One', 'Source Code Pro', monospace;
+  font-size: clamp(22px, 3.2vw, 38px);
+  font-weight: 400;
+  letter-spacing: 2px;
+  color: #e8f4ff;
+  text-shadow:
+    0 0 8px rgba(120, 220, 255, 0.55),
+    0 0 18px rgba(120, 220, 255, 0.35),
+    0 0 32px rgba(120, 220, 255, 0.18),
+    0 1px 0 rgba(0, 0, 0, 0.4);
+  margin: 0 6px;
+  vertical-align: baseline;
+  animation:
+    heroInterEntry 1.4s ease-out 1.4s both,
+    heroInterFlicker 7s steps(1, end) 2.8s infinite;
+}
+/* One-time entrance: blur in, settle */
+@keyframes heroInterEntry {
+  0%   { opacity: 0; transform: translateY(8px); filter: blur(2px); }
+  60%  { opacity: 1; transform: translateY(0); filter: blur(0); }
+  65%  { opacity: 0.4; }
+  72%  { opacity: 1; }
+  78%  { opacity: 0.6; }
+  84%  { opacity: 1; }
+  100% { opacity: 1; }
+}
+/* Bug-light continuous flicker: most of the time it's lit, but at irregular
+   intervals it dims, snaps off and back on, or fades the glow. Uses
+   steps(1,end) above so the changes are abrupt — not smooth fades — which
+   reads as a real failing bulb rather than a soft pulse. */
+@keyframes heroInterFlicker {
+  0%, 100% {
+    opacity: 1;
+    text-shadow:
+      0 0 8px rgba(120, 220, 255, 0.55),
+      0 0 18px rgba(120, 220, 255, 0.35),
+      0 0 32px rgba(120, 220, 255, 0.18),
+      0 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  /* Tiny twitch */
+  3%, 3.5% {
+    opacity: 0.55;
+    text-shadow:
+      0 0 4px rgba(120, 220, 255, 0.3),
+      0 0 10px rgba(120, 220, 255, 0.18),
+      0 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  4% { opacity: 1; }
+  /* Brief blackout */
+  17%, 17.6% {
+    opacity: 0.15;
+    text-shadow: 0 0 2px rgba(120, 220, 255, 0.15);
+  }
+  18% { opacity: 1; }
+  /* Mid-cycle stutter (3 rapid pulses) */
+  31%   { opacity: 0.5; }
+  31.4% { opacity: 1; }
+  31.8% { opacity: 0.4; }
+  32.2% { opacity: 1; }
+  32.6% { opacity: 0.7; }
+  33%   { opacity: 1; }
+  /* Long dim spell */
+  47%, 49% {
+    opacity: 0.65;
+    text-shadow:
+      0 0 6px rgba(120, 220, 255, 0.4),
+      0 0 14px rgba(120, 220, 255, 0.22),
+      0 1px 0 rgba(0, 0, 0, 0.4);
+  }
+  49.5% { opacity: 1; }
+  /* Quick off-on snap */
+  62%   { opacity: 0.2; }
+  62.4% { opacity: 1; }
+  /* Faint stutter near end */
+  78%   { opacity: 0.85; }
+  78.5% { opacity: 1; }
+  79%   { opacity: 0.6; }
+  79.5% { opacity: 1; }
+  /* Final near-blackout before reset */
+  91%, 91.8% {
+    opacity: 0.1;
+    text-shadow: 0 0 2px rgba(120, 220, 255, 0.1);
+  }
+  92.2% { opacity: 1; }
+}
+@media (max-width: 540px) {
+  .hero-interracial { letter-spacing: 1px; }
 }
 
 .hero-race {
@@ -3256,7 +3347,7 @@ section[id] { scroll-margin-top: 70px; }
   letter-spacing: 1.5px;
   text-transform: uppercase;
   color: var(--accent-red);
-  margin: 0 0 10px;
+  margin: 10px 0 4px;
   padding: 7px 12px;
   background: rgba(230, 57, 70, 0.08);
   border: 1px dashed rgba(230, 57, 70, 0.45);
@@ -3874,7 +3965,7 @@ section[id] { scroll-margin-top: 70px; }
   .obj-multi-header-title { font-size: 11px; letter-spacing: 1px; }
   .obj-multi-row .obj-multi-name { font-size: 11px; letter-spacing: 0.5px; }
   .obj-multi-row .obj-multi-pop, .obj-multi-row .obj-multi-share { font-size: 11px; }
-  .obj-multi-row .obj-multi-mult { font-size: 17px; }
+  .obj-multi-row .obj-multi-mult { font-size: 13px; line-height: 1.15; letter-spacing: 0; }
   .obj-multi-footnotes { padding: 12px 14px; font-size: 9px; }
   .obj-jur-stats { gap: 14px; }
   .obj-jur-stat { min-width: 72px; }
@@ -4193,6 +4284,18 @@ section[id] { scroll-margin-top: 70px; }
   text-underline-offset: 2px;
 }
 .why-source-link a:hover { color: var(--accent-red); }
+/* Stage-specific source visibility:
+   - Stage 1 (FBI): only the FBI link, "Source" singular
+   - Stage 2 (CA actual): only the CA AG link, "Source" singular
+   - Stage 3 (Pop): both links, "Sources" plural */
+.why-revealer[data-stage="fbi"] .why-source-ca,
+.why-revealer[data-stage="fbi"] .why-source-sep,
+.why-revealer[data-stage="fbi"] .why-source-plural { display: none; }
+
+.why-revealer[data-stage="ca"] .why-source-fbi,
+.why-revealer[data-stage="ca"] .why-source-sep,
+.why-revealer[data-stage="ca"] .why-source-plural { display: none; }
+/* Stage 3: all visible (default), no overrides needed */
 /* Inline sources at bottom of revealer chart card */
 .why-source-link--inline {
   margin-top: 12px;
@@ -4283,8 +4386,9 @@ section[id] { scroll-margin-top: 70px; }
 }
 .why-revealer-btn {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 4px;
   font-family: 'Source Code Pro', monospace;
   font-size: 12px;
   font-weight: 700;
@@ -4298,6 +4402,64 @@ section[id] { scroll-margin-top: 70px; }
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(230,57,70,0.3), inset 0 -2px 0 rgba(0,0,0,0.2);
   transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.why-revealer-btn-main {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.why-revealer-btn-scrolldown-main {
+  display: none; /* shown only on stage 3 */
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+.why-revealer-flash-arrow {
+  display: inline-block;
+  color: #fff;
+  font-weight: 900;
+  animation: scrollDownArrow 1s ease-in-out infinite;
+}
+.why-revealer-btn-sub {
+  display: none;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 1.3px;
+  opacity: 0.85;
+  padding-top: 6px;
+  margin-top: 2px;
+  border-top: 1px solid rgba(255,255,255,0.18);
+  width: 100%;
+  text-align: center;
+}
+.why-revealer-btn-sub .why-revealer-startover-arrow {
+  display: inline-block;
+  margin-left: 3px;
+  font-weight: 700;
+}
+/* Stage 3 (pop): scrolldown is primary, start over is secondary */
+.why-revealer[data-stage="pop"] .why-revealer-btn-main { display: none; }
+.why-revealer[data-stage="pop"] .why-revealer-btn-scrolldown-main { display: inline-flex; }
+.why-revealer[data-stage="pop"] .why-revealer-btn-sub { display: block; }
+/* Stage 3: button itself flashes to draw attention */
+.why-revealer[data-stage="pop"] .why-revealer-btn {
+  animation: btnAttentionFlash 1.6s ease-in-out infinite;
+}
+@keyframes btnAttentionFlash {
+  0%, 100% {
+    box-shadow: 0 4px 14px rgba(230,57,70,0.3), inset 0 -2px 0 rgba(0,0,0,0.2);
+    background: var(--accent-red);
+  }
+  50% {
+    box-shadow: 0 6px 26px rgba(230,57,70,0.7), 0 0 0 3px rgba(230,57,70,0.25), inset 0 -2px 0 rgba(0,0,0,0.2);
+    background: #f04757;
+  }
+}
+@keyframes scrollDownArrow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(4px); }
 }
 .why-revealer-btn:hover {
   transform: translateY(-1px);
@@ -4332,19 +4494,24 @@ section[id] { scroll-margin-top: 70px; }
   box-shadow: 0 0 8px rgba(230,57,70,0.6);
 }
 
+/* Scroll-down hint inside button — animation defined with .why-revealer-btn-sub above */
+
 /* Wider label column inside the revealer (since labels now read "Hispanic Arrests" etc.) */
 .why-revealer .why-bar-label { width: 130px; font-size: 10px; }
 .why-revealer .why-bar-row { margin-bottom: 3px; }
 .why-revealer .why-bar-track { height: 14px; }
 /* Paired arrest+pop bars share a tighter group */
 .why-revealer-pair {
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   animation: whyRowFade 0.45s ease both;
-  padding-bottom: 4px;
+  padding-bottom: 2px;
   border-bottom: 1px dashed rgba(255,255,255,0.04);
 }
 .why-revealer-pair:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
-.why-bar-row--paired { margin-bottom: 2px !important; }
+.why-bar-row--paired { margin-bottom: 1px !important; }
+/* On pop stage the bars are shorter so the chart fits in viewport */
+.why-revealer[data-stage="pop"] .why-bar-track { height: 12px; }
+.why-revealer[data-stage="pop"] .why-revealer-pair { margin-bottom: 3px; padding-bottom: 1px; }
 .why-bar-row--pop .why-bar-label--pop {
   color: var(--accent-red) !important;
   opacity: 0.85;
@@ -4558,6 +4725,7 @@ section[id] { scroll-margin-top: 70px; }
   </div>
   <div class="hero-badge">A Public Records Request Investigation</div>
   <h1 class="hero-title">California
+    <span class="hero-interracial">INTERRACIAL</span>
     <span class="hero-race-wrap">
       <span class="hero-race">RACE</span>
     </span>
@@ -4608,13 +4776,20 @@ section[id] { scroll-margin-top: 70px; }
       <div class="why-revealer-subtitle" id="whyRevealerSubtitle"></div>
       <div class="why-revealer-bars" id="whyRevealerBars"></div>
       <div class="why-source-link why-source-link--inline">
-        Sources: <a href="https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/explorer/crime/crime-trend" target="_blank" rel="noopener">FBI Crime Data Explorer</a> &middot; <a href="https://oag.ca.gov/crime/cjsc/stats/crimes-clearances" target="_blank" rel="noopener">CA AG &ldquo;Crime in California&rdquo; Table 31</a>
+        Source<span class="why-source-plural">s</span>:
+        <a class="why-source-fbi" href="https://cde.ucr.cjis.gov/LATEST/webapp/#/pages/explorer/crime/crime-trend" target="_blank" rel="noopener">FBI Crime Data Explorer</a><span class="why-source-sep"> &middot; </span><a class="why-source-ca" href="https://data-openjustice.doj.ca.gov/sites/default/files/2025-07/Crime%20In%20CA%202024%20final.pdf" target="_blank" rel="noopener">CA AG &ldquo;Crime in California&rdquo; Table 31</a>
       </div>
     </div>
     <div class="why-revealer-action">
       <button class="why-revealer-btn" id="whyRevealerBtn" onclick="advanceWhyRevealer()">
-        <span id="whyRevealerBtnText">Now show the actual numbers</span>
-        <span class="why-revealer-arrow" id="whyRevealerArrow">↓</span>
+        <span class="why-revealer-btn-scrolldown-main">
+          <span class="why-revealer-flash-arrow">↓</span> Scroll down to keep reading <span class="why-revealer-flash-arrow">↓</span>
+        </span>
+        <span class="why-revealer-btn-main">
+          <span id="whyRevealerBtnText">Click to show the actual numbers</span>
+          <span class="why-revealer-arrow" id="whyRevealerArrow">↓</span>
+        </span>
+        <span class="why-revealer-btn-sub">or click to start over <span class="why-revealer-startover-arrow">↻</span></span>
       </button>
       <div class="why-revealer-progress">
         <span class="why-revealer-dot active" data-stage="fbi"></span>
@@ -4992,7 +5167,6 @@ section[id] { scroll-margin-top: 70px; }
       <div class="obj-chart-card">
         <div class="obj-chart-title">California Black Homicide Disproportionality &mdash; Original vs. Exoneration-Adjusted</div>
         <div class="obj-chart-sub">For each year 2020&ndash;2024: arrest share &divide; 6.0% population share. &ldquo;Adjusted&rdquo; subtracts 19 wrongful convictions per year (the entire U.S. annual total) from the California Black count and from the California total.</div>
-        <div class="obj-scroll-hint">Swipe to see all years</div>
         <div class="obj-chart-wide"><div class="obj-chart-wide-inner"><canvas id="chartExonAdj"></canvas></div></div>
       </div>
 
@@ -5583,7 +5757,7 @@ section[id] { scroll-margin-top: 70px; }
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-text">
-    California Race Crime — Independent Public Records Investigation<br>
+    California Interracial Race Crime — Independent Public Records Investigation<br>
     Data sourced from police department PRAs and CA Attorney General reports<br>
     All source data available for public review
   </div>
@@ -7603,13 +7777,13 @@ function renderTrendCharts() {
         barsHTML += `<rect x="${arrestX}" y="${arrestY}" width="${barWidth}" height="${arrestH}" fill="${color}" rx="2"/>`;
         barsHTML += `<circle cx="${arrestX + barWidth/2}" cy="${arrestY + arrestH/2}" r="${Math.max(barWidth, 20)}" fill="transparent" class="trend-hit" data-race="${raceLabel(race)}" data-val="${Math.round(arrestVal).toLocaleString()}" data-year="Avg" data-color="${color}" data-crime="${data.label}" data-suffix="avg ${data.label.toLowerCase()} arrests/yr" style="cursor:pointer;"/>`;
         // Value label above arrest bar
-        barsHTML += `<text x="${arrestX + barWidth/2}" y="${arrestY - 4}" fill="#fff" font-size="9" font-weight="700" text-anchor="middle" font-family="Source Code Pro">${Math.round(arrestVal).toLocaleString()}</text>`;
+        barsHTML += `<text x="${arrestX + barWidth/2}" y="${arrestY - 6}" fill="#fff" font-size="12" font-weight="800" text-anchor="middle" font-family="Source Code Pro">${Math.round(arrestVal).toLocaleString()}</text>`;
         
         // Population bar (translucent red fill + solid red outline)
         barsHTML += `<rect x="${popX}" y="${popY}" width="${barWidth}" height="${popH}" fill="rgba(230,57,70,0.22)" stroke="var(--accent-red)" stroke-width="1.5" rx="2"/>`;
         barsHTML += `<circle cx="${popX + barWidth/2}" cy="${popY + popH/2}" r="${Math.max(barWidth, 20)}" fill="transparent" class="trend-hit" data-race="${raceLabel(race)}" data-val="${popPct}%" data-year="Pop" data-color="var(--accent-red)" data-crime="${data.label}" data-suffix="of CA population" style="cursor:pointer;"/>`;
         // Value label above pop bar
-        barsHTML += `<text x="${popX + barWidth/2}" y="${popY - 4}" fill="var(--accent-red)" font-size="9" font-weight="700" text-anchor="middle" font-family="Source Code Pro">${popPct}%</text>`;
+        barsHTML += `<text x="${popX + barWidth/2}" y="${popY - 6}" fill="var(--accent-red)" font-size="12" font-weight="800" text-anchor="middle" font-family="Source Code Pro">${popPct}%</text>`;
         
         // ===== Below-baseline label stack =====
         // "Arrests" / "Pop" micro-labels directly under each bar
@@ -8401,7 +8575,7 @@ const WHY_REVEALER_STAGES = [
     key: 'fbi',
     pill: 'California FBI Homicide Data 2024',
     subtitle: '',
-    btn: 'Now show the actual numbers',
+    btn: 'Click to show the actual numbers',
     arrow: '↓',
     bars: [
       { label: 'White Arrests',    color: '#4ea8de', count: 746 },
@@ -8413,7 +8587,7 @@ const WHY_REVEALER_STAGES = [
     key: 'ca',
     pill: 'Actual California Homicide Data 2024',
     subtitle: 'Whites not combined with Hispanics',
-    btn: 'Compare to California population',
+    btn: 'Click to compare to California population',
     arrow: '→',
     bars: [
       { label: 'Hispanic Arrests', color: '#e8853a', count: 629 },
@@ -8548,11 +8722,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   };
 
-  // Inject a real-DOM scroll-hint badge above every horizontally-scrollable
+  // Inject a real-DOM scroll-hint badge BELOW every horizontally-scrollable
   // table/chart/grid in the given container. Idempotent — won't inject twice.
   function injectScrollHints(scope) {
     const targets = scope.querySelectorAll(
-      '.obj-table-wrap, .obj-chart-wide, .obj-multi-card, .obj-jur-row'
+      '.obj-table-wrap, .obj-chart-wide, .obj-jur-row'
     );
     targets.forEach(t => {
       if (t.dataset.scrollHinted) return;
@@ -8564,7 +8738,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const hint = document.createElement('div');
         hint.className = 'scroll-hint-badge';
         hint.innerHTML = '<span class="arrow">↔</span> Swipe to see more <span class="arrow">↔</span>';
-        t.parentNode.insertBefore(hint, t);
+        // Insert AFTER the scrollable element so the chart/table reads first
+        if (t.nextSibling) {
+          t.parentNode.insertBefore(hint, t.nextSibling);
+        } else {
+          t.parentNode.appendChild(hint);
+        }
         t.dataset.scrollHinted = '1';
       });
     });
