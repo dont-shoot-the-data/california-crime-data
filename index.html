@@ -4768,6 +4768,46 @@ section[id] { scroll-margin-top: 70px; }
       <div class="hero-stat-label">Cities Requested</div>
     </div>
   </div>
+  <style>
+  .dsd-brand {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 7px 14px 7px 8px;
+    background: rgba(0,0,0,0.45);
+    border: 1px dashed rgba(230,57,70,0.45); border-radius: 4px;
+    text-decoration: none;
+    transition: border-color .25s, background .25s, transform .25s;
+  }
+  .dsd-brand:hover {
+    border-color: rgba(230,57,70,0.9);
+    background: rgba(230,57,70,0.08);
+    transform: translateY(-1px);
+  }
+  .dsd-brand-logo {
+    width: 26px; height: 26px; display: block;
+    border-radius: 50%; background: #0a0a0f; flex-shrink: 0;
+  }
+  .dsd-brand-name {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    color: #e63946; text-transform: uppercase; white-space: nowrap;
+  }
+  .dsd-brand-wrap {
+    text-align: center;
+    margin: 22px 0 8px;
+  }
+  @media (max-width: 540px) {
+    .dsd-brand { padding: 6px 12px 6px 7px; gap: 8px; }
+    .dsd-brand-logo { width: 22px; height: 22px; }
+    .dsd-brand-name { font-size: 10px; letter-spacing: 1.5px; }
+  }
+  </style>
+  <div class="dsd-brand-wrap">
+    <a class="dsd-brand" href="https://github.com/dont-shoot-the-data" target="_blank" rel="noopener" aria-label="dont-shoot-the-data on GitHub">
+      <img class="dsd-brand-logo" src="dsd-logo.png" alt=""
+           onerror="this.onerror=null; this.src='https://github.com/dont-shoot-the-data.png';">
+      <span class="dsd-brand-name">dont-shoot-the-data</span>
+    </a>
+  </div>
   <div class="scroll-indicator-wrap">
     <div class="scroll-indicator" onclick="scrollToSection('whyThis')">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
