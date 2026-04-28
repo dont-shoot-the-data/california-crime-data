@@ -4,6 +4,28 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>California Interracial Race Crime — By the Numbers</title>
+
+<!-- Search engine description -->
+<meta name="description" content="An independent investigation using public records requests to examine interracial crime data for homicide, sexual assault, kidnapping, and robbery across California's 10 largest cities. 24 years of California Attorney General data. Suspects, victims, and disproportionality — broken down by race.">
+
+<!-- Open Graph (Facebook, iMessage, Discord, WhatsApp, LinkedIn, Slack) -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://dont-shoot-the-data.github.io/california-crime-data/">
+<meta property="og:title" content="California Interracial Race Crime — By the Numbers">
+<meta property="og:description" content="24 years of CA Attorney General arrest data. 10 cities. Public records requests. Who's attacking who, and how much — finally answered with data.">
+<meta property="og:image" content="https://dont-shoot-the-data.github.io/california-crime-data/og-preview.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="California Interracial Race Crime — By the Numbers. An independent public records investigation.">
+<meta property="og:site_name" content="Don't Shoot the Data">
+
+<!-- Twitter Card (X, also used by some other sites as fallback) -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="California Interracial Race Crime — By the Numbers">
+<meta name="twitter:description" content="24 years of CA Attorney General arrest data. 10 cities. Public records requests. Who's attacking who, and how much — finally answered with data.">
+<meta name="twitter:image" content="https://dont-shoot-the-data.github.io/california-crime-data/og-preview.png">
+<meta name="twitter:image:alt" content="California Interracial Race Crime — By the Numbers. An independent public records investigation.">
+
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Code+Pro:wght@400;600&family=DM+Sans:wght@400;500;600;700&family=Saira+Stencil+One&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
@@ -3193,7 +3215,7 @@ section[id] { scroll-margin-top: 70px; }
   font-weight: 700;
 }
 .obj-table td.obj-hl strong {
-  color: var(--accent-red);
+  color: inherit;
 }
 
 /* Note / highlight boxes */
@@ -4706,7 +4728,7 @@ section[id] { scroll-margin-top: 70px; }
 
 <!-- NAVIGATION -->
 <nav class="nav" id="nav">
-  <div class="nav-logo">CA Crime Data</div>
+  <div class="nav-logo" onclick="scrollToSection('hero')" style="cursor:pointer;">CA Crime Data</div>
   <div class="nav-links">
     <a onclick="scrollToSection('map')">Map</a>
     <a onclick="scrollToSection('cities')">Cities</a>
@@ -5595,7 +5617,7 @@ section[id] { scroll-margin-top: 70px; }
           </tr></thead>
           <tbody>
             <tr><td class="obj-td-left"><strong>Black</strong></td><td>58,668</td><td><strong>38.4%</strong></td><td>~13%</td><td class="obj-hl"><strong>3.0&times;</strong></td></tr>
-            <tr><td class="obj-td-left"><strong>Hispanic</strong></td><td>45,109</td><td><strong>29.5%</strong></td><td>~19%</td><td class="obj-hl"><strong>1.6&times;</strong></td></tr>
+            <tr><td class="obj-td-left"><strong>Hispanic</strong></td><td>45,109</td><td><strong>29.5%</strong></td><td>~19%</td><td class="obj-hl" style="color:#e8853a"><strong>1.6&times;</strong></td></tr>
             <tr><td class="obj-td-left"><strong>White (non-Hisp)</strong></td><td>41,915</td><td><strong>27.4%</strong></td><td>~60%</td><td class="obj-hl" style="color:#4ade80"><strong>0.46&times;</strong></td></tr>
             <tr><td class="obj-td-left">Native American</td><td>4,583</td><td>3.0%</td><td>~1.3%</td><td class="obj-hl">2.3&times;</td></tr>
             <tr><td class="obj-td-left">Asian</td><td>2,444</td><td>1.6%</td><td>~6%</td><td class="obj-hl" style="color:#4ade80">0.27&times;</td></tr>
@@ -5622,9 +5644,9 @@ section[id] { scroll-margin-top: 70px; }
           </tr></thead>
           <tbody>
             <tr><td class="obj-td-left"><strong>Black</strong></td><td><strong>~33%</strong></td><td>~13%</td><td class="obj-hl"><strong>2.5&times;</strong></td><td><strong>1,218</strong></td></tr>
-            <tr><td class="obj-td-left"><strong>Hispanic</strong></td><td><strong>~21%</strong></td><td>~19%</td><td class="obj-hl"><strong>1.1&times;</strong></td><td><strong>606</strong></td></tr>
+            <tr><td class="obj-td-left"><strong>Hispanic</strong></td><td><strong>~21%</strong></td><td>~19%</td><td class="obj-hl" style="color:#e8853a"><strong>1.1&times;</strong></td><td><strong>606</strong></td></tr>
             <tr><td class="obj-td-left"><strong>White (non-Hisp)</strong></td><td><strong>~32%</strong></td><td>~60%</td><td class="obj-hl" style="color:#4ade80"><strong>0.5&times;</strong></td><td><strong>231</strong></td></tr>
-            <tr><td class="obj-td-left">Native American</td><td>~2%</td><td>~1.3%</td><td class="obj-hl">1.5&times;</td><td>1,045</td></tr>
+            <tr><td class="obj-td-left">Native American</td><td>~2%</td><td>~1.3%</td><td class="obj-hl" style="color:#e8853a">1.5&times;</td><td>1,045</td></tr>
             <tr><td class="obj-td-left">Asian / PI</td><td>~1%</td><td>~6%</td><td class="obj-hl" style="color:#4ade80">0.17&times;</td><td>88</td></tr>
           </tbody>
         </table>
