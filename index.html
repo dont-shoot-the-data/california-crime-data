@@ -1628,6 +1628,7 @@ section[id] { scroll-margin-top: 70px; }
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 2px;
   padding: 0 4px;
 }
@@ -1645,18 +1646,19 @@ section[id] { scroll-margin-top: 70px; }
   letter-spacing: 1.2px;
   text-transform: uppercase;
   text-align: center;
-  line-height: 1.2;
-  max-width: 70px;
+  line-height: 1.3;
+  max-width: 100px;
+  margin: 0 auto;
 }
 @media (max-width: 540px) {
   .vc-flat-disparity {
     grid-template-columns: 1fr;
     gap: 10px;
   }
-  .vc-flat-disp-ratio { order: 3; flex-direction: row; gap: 8px; }
+  .vc-flat-disp-ratio { order: 3; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; padding: 6px 0; }
   .vc-flat-disp-ratio-label { max-width: none; }
   .vc-flat-disp-count { font-size: 18px; }
-  .vc-flat-disp-ratio-num { font-size: 16px; }
+  .vc-flat-disp-ratio-num { font-size: 22px; }
 }
 
 .vc-flat-foot {
@@ -3221,6 +3223,77 @@ section[id] { scroll-margin-top: 70px; }
   height: 200px;
 }
 
+/* Horizontal-scroll hint shown above tables/charts that overflow on mobile. */
+.obj-scroll-hint {
+  display: none;
+  text-align: center;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+  padding: 6px 10px;
+  background: rgba(230, 57, 70, 0.06);
+  border: 1px dashed rgba(230, 57, 70, 0.3);
+  border-radius: 4px;
+  opacity: 0.85;
+}
+.obj-scroll-hint::before { content: '↔ '; color: var(--accent-red); margin-right: 4px; }
+@media (max-width: 680px) {
+  .obj-scroll-hint { display: block; }
+}
+
+/* Scroll-hint badge injected by JS above any horizontally-scrolling element.
+   Real DOM element (not a pseudo) so it can't get clipped by overflow:auto.
+   Pulses to draw attention. */
+.scroll-hint-badge {
+  display: none;
+  text-align: center;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent-red);
+  margin: 0 0 10px;
+  padding: 7px 12px;
+  background: rgba(230, 57, 70, 0.08);
+  border: 1px dashed rgba(230, 57, 70, 0.45);
+  border-radius: 4px;
+  animation: scrollHintPulse 1.8s ease-in-out infinite;
+}
+.scroll-hint-badge .arrow {
+  display: inline-block;
+  margin: 0 4px;
+  animation: scrollHintArrow 1.4s ease-in-out infinite;
+}
+@keyframes scrollHintPulse {
+  0%, 100% { background: rgba(230, 57, 70, 0.08); border-color: rgba(230, 57, 70, 0.45); }
+  50%      { background: rgba(230, 57, 70, 0.16); border-color: rgba(230, 57, 70, 0.75); }
+}
+@keyframes scrollHintArrow {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(4px); }
+}
+@media (max-width: 680px) {
+  .scroll-hint-badge { display: block; }
+}
+
+/* Wide-chart wrapper: the chart itself is wider than the container, forcing
+   horizontal scroll on narrow viewports. Used for charts where data labels
+   would otherwise overlap (e.g. paired bar charts with many year groups). */
+.obj-chart-wide {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 -4px;
+}
+.obj-chart-wide-inner {
+  min-width: 560px;
+  height: 260px;
+  position: relative;
+}
+
 /* Toggle buttons for charts */
 .obj-toggle-row {
   display: flex;
@@ -3790,13 +3863,13 @@ section[id] { scroll-margin-top: 70px; }
   .obj-banner-title { font-size: 11.5px; letter-spacing: 0.5px; }
   .obj-stat-box { min-width: 110px; padding: 12px 10px; }
   .obj-stat-num { font-size: 19px; }
-  .obj-content { font-size: 13.5px; padding: 18px 4px 10px; }
+  .obj-content { font-size: 13.5px; padding: 18px 14px 10px; }
   .obj-content h4 { font-size: 11.5px; margin: 20px 0 10px; }
   .obj-chart-card { padding: 14px; }
   .obj-chart-wrap { height: 240px; }
   .obj-chart-wrap-tall { height: 300px; }
   .obj-chart-wrap-short { height: 200px; }
-  .obj-multi-row, .obj-multi-colheader { grid-template-columns: 1fr 48px 60px 55px; padding: 10px 12px; gap: 5px; font-size: 10px; }
+  .obj-multi-row, .obj-multi-colheader { grid-template-columns: 1fr 48px 60px 55px !important; padding: 10px 12px; gap: 5px; font-size: 10px; }
   .obj-multi-header { padding: 12px 14px; }
   .obj-multi-header-title { font-size: 11px; letter-spacing: 1px; }
   .obj-multi-row .obj-multi-name { font-size: 11px; letter-spacing: 0.5px; }
@@ -3807,17 +3880,25 @@ section[id] { scroll-margin-top: 70px; }
   .obj-jur-stat { min-width: 72px; }
   .obj-jur-stat .num { font-size: 19px; }
   .obj-nypd-headline { font-size: 26px; }
+  /* Wharton: stack bar rows vertically so label doesn't crowd the track */
+  .wharton-row { grid-template-columns: 1fr 70px !important; gap: 4px 8px !important; }
+  .wharton-label { grid-column: 1 / -1 !important; text-align: left !important; margin-bottom: 2px; }
+  .wharton-track { grid-column: 1; }
+  .wharton-tag { grid-column: 2; font-size: 9px !important; align-self: center; }
+  /* Brookings/Wharton multi-row text: cleaner wrapping, smaller desc */
+  .obj-multi-row .obj-multi-name { line-height: 1.2; font-size: 11.5px !important; }
+  .obj-multi-row .obj-multi-desc { font-size: 9px !important; line-height: 1.4; margin-top: 4px; color: var(--text-muted); }
 }
 
 /* ============ WHY-THIS-INVESTIGATION (BEFORE MAP) ============ */
 .why-section {
   box-sizing: border-box;
-  padding: 20px 20px 20px;
+  padding: 20px 20px 24px;
   max-width: 1100px;
   margin: 0 auto;
   position: relative;
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -4323,10 +4404,10 @@ section[id] { scroll-margin-top: 70px; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  margin-top: 10px;
-  padding-top: 4px;
-  padding-bottom: 4px;
+  gap: 6px;
+  margin-top: 14px;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 .why-ominous-text {
   font-family: 'Source Code Pro', monospace;
@@ -4347,15 +4428,15 @@ section[id] { scroll-margin-top: 70px; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border: 1px solid var(--border);
   border-radius: 50%;
   text-decoration: none;
   animation: bounce 2.5s ease infinite;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-top: 18px;
+  margin-top: 4px;
 }
 .why-scroll-indicator:hover {
   border-color: var(--accent-red);
@@ -4460,12 +4541,12 @@ section[id] { scroll-margin-top: 70px; }
 <nav class="nav" id="nav">
   <div class="nav-logo">CA Crime Data</div>
   <div class="nav-links">
-    <a onclick="document.getElementById('map').scrollIntoView({behavior:'smooth'})">Map</a>
-    <a onclick="document.getElementById('cities').scrollIntoView({behavior:'smooth'})">Cities</a>
-    <a onclick="document.getElementById('statewide').scrollIntoView({behavior:'smooth'})">Statewide</a>
-    <a onclick="document.getElementById('synthesis').scrollIntoView({behavior:'smooth'})">Synthesis</a>
-    <a onclick="document.getElementById('objections').scrollIntoView({behavior:'smooth'})">Objections</a>
-    <a onclick="document.getElementById('transparency').scrollIntoView({behavior:'smooth'})">Transparency</a>
+    <a onclick="scrollToSection('map')">Map</a>
+    <a onclick="scrollToSection('cities')">Cities</a>
+    <a onclick="scrollToSection('statewide')">Statewide</a>
+    <a onclick="scrollToSection('synthesis')">Synthesis</a>
+    <a onclick="scrollToSection('objections')">Objections</a>
+    <a onclick="scrollToSection('transparency')">Transparency</a>
   </div>
 </nav>
 
@@ -4498,7 +4579,7 @@ section[id] { scroll-margin-top: 70px; }
     </div>
   </div>
   <div class="scroll-indicator-wrap">
-    <div class="scroll-indicator" onclick="document.getElementById('whyThis').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-indicator" onclick="scrollToSection('whyThis')">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
     </div>
   </div>
@@ -4545,7 +4626,7 @@ section[id] { scroll-margin-top: 70px; }
 
   <div class="why-ominous reveal">
     <div class="why-ominous-text">See what else they&rsquo;re hiding.</div>
-    <a class="why-scroll-indicator" onclick="document.getElementById('map').scrollIntoView({behavior:'smooth'})">
+    <a class="why-scroll-indicator" onclick="scrollToSection('map')">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M19 12l-7 7-7-7"/></svg>
     </a>
   </div>
@@ -4896,7 +4977,7 @@ section[id] { scroll-margin-top: 70px; }
           <tbody>
             <tr><td class="obj-td-left">Homicide offenders identified</td><td><strong>6,425</strong></td><td><strong>4,745</strong></td><td><a href="https://ucr.fbi.gov/crime-in-the-u.s/2019/crime-in-the-u.s.-2019/tables/expanded-homicide-data-table-3.xls" target="_blank">FBI SHR 2019 &rarr;</a></td></tr>
             <tr><td class="obj-td-left">Murder exonerations</td><td><strong>19</strong></td><td><strong>11</strong></td><td><a href="https://exonerationregistry.org/sites/exonerationregistry.org/files/documents/Updated%20CP%20-%20Race%20Report%20Preview.pdf" target="_blank">NRE 2022 Report &rarr;</a></td></tr>
-            <tr><td class="obj-td-left" style="background:rgba(230,57,70,0.08);color:var(--accent-red)"><strong>Exoneration rate</strong></td><td class="obj-hl"><strong>0.30%</strong></td><td class="obj-hl"><strong>0.23%</strong></td><td style="font-size:10px;color:var(--text-muted)">19&divide;6,425 &middot; 11&divide;4,745</td></tr>
+            <tr><td class="obj-td-left" style="background:rgba(230,57,70,0.08);color:var(--accent-red)"><strong>Exoneration rate</strong></td><td class="obj-hl"><strong>0.30%</strong></td><td class="obj-hl"><strong>0.23%</strong></td><td></td></tr>
           </tbody>
         </table>
       </div>
@@ -4911,7 +4992,8 @@ section[id] { scroll-margin-top: 70px; }
       <div class="obj-chart-card">
         <div class="obj-chart-title">California Black Homicide Disproportionality &mdash; Original vs. Exoneration-Adjusted</div>
         <div class="obj-chart-sub">For each year 2020&ndash;2024: arrest share &divide; 6.0% population share. &ldquo;Adjusted&rdquo; subtracts 19 wrongful convictions per year (the entire U.S. annual total) from the California Black count and from the California total.</div>
-        <div class="obj-chart-wrap-short"><canvas id="chartExonAdj"></canvas></div>
+        <div class="obj-scroll-hint">Swipe to see all years</div>
+        <div class="obj-chart-wide"><div class="obj-chart-wide-inner"><canvas id="chartExonAdj"></canvas></div></div>
       </div>
 
       <div class="obj-highlight">
@@ -4935,26 +5017,28 @@ section[id] { scroll-margin-top: 70px; }
         <div class="obj-chart-wrap"><canvas id="chartPolice"></canvas></div>
       </div>
 
-      <div class="obj-stat-row">
-        <div class="obj-stat-box">
-          <div class="obj-stat-num">18.0</div>
-          <div class="obj-stat-label">Black/yr</div>
+      <div class="obj-stat-row" style="flex-direction:column;gap:10px;">
+        <div class="obj-stat-box obj-stat-box--hero" style="border-color:rgba(74,222,128,0.55);background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(74,222,128,0.02));padding:20px 18px;">
+          <div class="obj-stat-num obj-stat-green" style="font-size:38px;line-height:1;">52.4</div>
+          <div class="obj-stat-label" style="font-size:11px;letter-spacing:2px;margin-top:6px;">Officers Killed/yr</div>
         </div>
-        <div class="obj-stat-box">
-          <div class="obj-stat-num obj-stat-blue">22.2</div>
-          <div class="obj-stat-label">White/yr</div>
-        </div>
-        <div class="obj-stat-box">
-          <div class="obj-stat-num" style="color:var(--hispanic-race)">11.2</div>
-          <div class="obj-stat-label">Hispanic/yr</div>
-        </div>
-        <div class="obj-stat-box">
-          <div class="obj-stat-num obj-stat-muted">0.9</div>
-          <div class="obj-stat-label">Asian/yr</div>
-        </div>
-        <div class="obj-stat-box" style="border-color:rgba(74,222,128,0.4)">
-          <div class="obj-stat-num obj-stat-green">52.4</div>
-          <div class="obj-stat-label">Officers Killed/yr</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;">
+          <div class="obj-stat-box" style="min-width:0;padding:10px 6px;">
+            <div class="obj-stat-num obj-stat-blue" style="font-size:18px;">22.2</div>
+            <div class="obj-stat-label" style="font-size:9px;letter-spacing:1px;">White/yr</div>
+          </div>
+          <div class="obj-stat-box" style="min-width:0;padding:10px 6px;">
+            <div class="obj-stat-num" style="font-size:18px;">18.0</div>
+            <div class="obj-stat-label" style="font-size:9px;letter-spacing:1px;">Black/yr</div>
+          </div>
+          <div class="obj-stat-box" style="min-width:0;padding:10px 6px;">
+            <div class="obj-stat-num" style="color:var(--hispanic-race);font-size:18px;">11.2</div>
+            <div class="obj-stat-label" style="font-size:9px;letter-spacing:1px;">Hispanic/yr</div>
+          </div>
+          <div class="obj-stat-box" style="min-width:0;padding:10px 6px;">
+            <div class="obj-stat-num obj-stat-muted" style="font-size:18px;">0.9</div>
+            <div class="obj-stat-label" style="font-size:9px;letter-spacing:1px;">Asian/yr</div>
+          </div>
         </div>
       </div>
 
@@ -5086,20 +5170,20 @@ section[id] { scroll-margin-top: 70px; }
       <div class="obj-chart-card">
         <div class="obj-chart-title">Wharton &middot; Same Poverty Level, Different Racial Composition</div>
         <div class="obj-chart-sub">Gun homicide rate in middle-class U.S. census tracts, mostly-white vs. mostly-Black. Both tract sets matched on poverty and income.</div>
-        <div style="max-width:520px;margin:20px auto 8px;padding:0 16px;">
-          <div style="display:grid;grid-template-columns:140px 1fr 50px;gap:10px;align-items:center;margin-bottom:12px;">
-            <div style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--white);text-align:right;">Mostly-white tracts</div>
-            <div style="position:relative;height:28px;background:rgba(255,255,255,0.03);border-radius:3px;">
+        <div class="wharton-bars" style="max-width:520px;margin:20px auto 8px;padding:0 16px;">
+          <div class="wharton-row" style="display:grid;grid-template-columns:140px 1fr 70px;gap:10px;align-items:center;margin-bottom:12px;">
+            <div class="wharton-label" style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--white);text-align:right;">Mostly-white tracts</div>
+            <div class="wharton-track" style="position:relative;height:28px;background:rgba(255,255,255,0.03);border-radius:3px;">
               <div style="position:absolute;left:0;top:0;bottom:0;width:20%;background:var(--white);border-radius:3px;display:flex;align-items:center;padding:0 10px;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--bg-card);">1&times;</div>
             </div>
-            <div></div>
+            <div class="wharton-tag" style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);">baseline</div>
           </div>
-          <div style="display:grid;grid-template-columns:140px 1fr 50px;gap:10px;align-items:center;margin-bottom:8px;">
-            <div style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--black);text-align:right;">Mostly-Black tracts</div>
-            <div style="position:relative;height:28px;background:rgba(255,255,255,0.03);border-radius:3px;">
+          <div class="wharton-row" style="display:grid;grid-template-columns:140px 1fr 70px;gap:10px;align-items:center;margin-bottom:8px;">
+            <div class="wharton-label" style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--black);text-align:right;">Mostly-Black tracts</div>
+            <div class="wharton-track" style="position:relative;height:28px;background:rgba(255,255,255,0.03);border-radius:3px;">
               <div style="position:absolute;left:0;top:0;bottom:0;width:80%;background:var(--black);border-radius:3px;display:flex;align-items:center;padding:0 10px;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#fff;">4&times;</div>
             </div>
-            <div style="font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:var(--accent-red);">baseline</div>
+            <div class="wharton-tag" style="font-family:'Source Code Pro',monospace;font-size:10px;font-weight:700;color:var(--accent-red);">4&times; higher</div>
           </div>
           <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.5px;margin-top:16px;padding-top:10px;border-top:1px solid var(--border);">
             Cheon, Lin, Harding, Wang, Small &middot; JAMA Network Open, 2020
@@ -6058,7 +6142,7 @@ function buildFlatInterracial(crime, city, dtSingular) {
       : (bigN / reverseN >= 2
           ? `${(bigN / reverseN).toFixed(bigN / reverseN >= 10 ? 0 : 1)}×`
           : `${(bigN / reverseN).toFixed(1)}×`);
-    const ratioLabel = reverseN === 0 ? 'one-way' : 'more common';
+    const ratioLabel = reverseN === 0 ? 'one direction only' : 'more often than reverse';
     disparityHTML = `
       <div class="vc-flat-disparity">
         <div class="vc-flat-disp-title">Biggest interracial disparity</div>
@@ -6689,7 +6773,7 @@ function renderCityDetail(cityId) {
               <div style="flex:1;min-width:0;max-width:110px;">
                 <div style="margin-bottom:6px;padding:6px 4px 5px;border-radius:8px;text-align:center;background:rgba(255,255,255,0.025);border:1.5px solid ${raceColors[race]};color:${raceColors[race]};box-shadow:inset 0 -3px 0 rgba(0,0,0,0.2);">
                   <div style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.5px;">${count}</div>
-                  <div style="font-size:7px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:0.85;margin-top:4px;white-space:nowrap;">${raceLabel(race)} ${dtSingular}s</div>
+                  <div style="font-size:8px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:0.85;margin-top:4px;white-space:nowrap;">${raceLabel(race)}</div>
                 </div>
                 <div style="display:flex;justify-content:center;align-items:flex-end;gap:4px;height:185px;padding-top:16px;border-bottom:1px solid var(--border);box-sizing:border-box;">
                   <div style="width:28px;display:flex;align-items:flex-end;justify-content:center;height:100%;position:relative;">
@@ -6990,7 +7074,7 @@ function renderCrimeDetail(crimeKey) {
               <div style="flex:1;min-width:0;max-width:110px;">
                 <div style="margin-bottom:6px;padding:6px 4px 5px;border-radius:8px;text-align:center;background:rgba(255,255,255,0.025);border:1.5px solid ${raceColors[race]};color:${raceColors[race]};box-shadow:inset 0 -3px 0 rgba(0,0,0,0.2);">
                   <div style="font-size:19px;font-weight:800;line-height:1;letter-spacing:-0.5px;">${count}</div>
-                  <div style="font-size:7px;font-weight:700;letter-spacing:1px;text-transform:uppercase;opacity:0.85;margin-top:4px;white-space:nowrap;">${raceLabel(race)} ${dtSingular}s</div>
+                  <div style="font-size:8px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;opacity:0.85;margin-top:4px;white-space:nowrap;">${raceLabel(race)}</div>
                 </div>
                 <div style="display:flex;justify-content:center;align-items:flex-end;gap:4px;height:185px;padding-top:16px;border-bottom:1px solid var(--border);box-sizing:border-box;">
                   <div style="width:28px;display:flex;align-items:flex-end;justify-content:center;height:100%;position:relative;">
@@ -7651,7 +7735,7 @@ function renderTrendCharts() {
     const trendStampKey = `trend_${key}_${mode}`;
     return `
       <div class="trend-chart-card reveal visible stagger-${Object.keys(statewideRates).indexOf(key) % 4 + 1}">
-        <div class="statewide-toggle" style="display:flex; justify-content:center; gap:0; flex-wrap:wrap; margin:0 auto 14px;">
+        <div class="statewide-toggle statewide-crime-toggle" style="display:flex; justify-content:center; gap:0; flex-wrap:wrap; margin:0 auto 14px;">
           <button class="state-toggle-btn${statewideMode==='rate'?' active':''}"    data-mode="rate"    onclick="switchStatewideView('rate')">Rate</button>
           <button class="state-toggle-btn${statewideMode==='counts'?' active':''}"  data-mode="counts"  onclick="switchStatewideView('counts')">Counts</button>
           <button class="state-toggle-btn${statewideMode==='average'?' active':''}" data-mode="average" onclick="switchStatewideView('average')">Average</button>
@@ -7844,7 +7928,7 @@ function renderPattern() {
         let tot=0, inter=0;
         pr.forEach(s => { if (crime.details[s]&&crime.details[s][v]) { tot+=crime.details[s][v]; if(s!==v) inter+=crime.details[s][v]; }});
         return {race:v, tot, inter, pct: tot>0?(inter/tot*100):0};
-      }).sort((a,b) => b.pct - a.pct);
+      }).sort((a,b) => b.inter - a.inter);
       const suspectRanked = pr.map(s => {
         let inter=0;
         if(crime.details[s]) pr.forEach(v => { if(v!==s) inter+=(crime.details[s][v]||0); });
@@ -7919,12 +8003,16 @@ function renderPattern() {
         ${['MOST MURDERED','MOST RAPED','MOST ROBBED','MOST KIDNAPPED'].map(l => `<div class="pattern-stamp" style="display:inline-block;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#fff;background:var(--accent-red);padding:6px 16px;border-radius:3px;letter-spacing:1.8px;text-transform:uppercase;transform:scale(0);opacity:0;box-shadow:0 3px 10px rgba(230,57,70,0.35),inset 0 0 0 1px rgba(255,255,255,0.12);text-shadow:0 1px 2px rgba(0,0,0,0.4);">${l}</div>`).join('')}
       </div>
       <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-secondary);margin-bottom:6px;">#1 most interracially targeted across all four crime categories</div>
-      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);margin-bottom:14px;letter-spacing:0.5px;">Ranked #1 or #2 most interracially victimized in every city:</div>
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);margin-bottom:14px;letter-spacing:0.5px;">Where White ranks in each city × crime combination we have data for:</div>
       <div class="pattern-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
         ${combos.map((c,i) => {
-          const rank = c.victimRank.indexOf('White');
-          const isFirst = rank === 0;
-          return '<div class="pattern-chip" style="font-family:\'Source Code Pro\',monospace;font-size:9px;letter-spacing:0.5px;padding:5px 10px;border-radius:3px;background:' + (isFirst ? 'rgba(78,168,222,0.15)' : 'rgba(255,214,10,0.12)') + ';border:1px solid ' + (isFirst ? 'rgba(78,168,222,0.5)' : 'rgba(255,214,10,0.4)') + ';color:' + (isFirst ? 'var(--white)' : '#ffd60a') + ';transform:translateY(30px) scale(0.8);opacity:0;"><span style="opacity:0.8;">' + c.city.replace('Co. Sheriff','').trim() + '</span> ' + c.crime + ' <strong style="color:' + (isFirst ? 'var(--white)' : '#ffd60a') + ';">#' + (rank+1) + '</strong></div>';
+          const rank = c.victimRank.indexOf('White') + 1;
+          let bg, border, color;
+          if (rank === 1) { bg = 'rgba(78,168,222,0.18)'; border = 'rgba(78,168,222,0.55)'; color = 'var(--white)'; }
+          else if (rank === 2) { bg = 'rgba(255,214,10,0.13)'; border = 'rgba(255,214,10,0.42)'; color = '#ffd60a'; }
+          else if (rank === 3) { bg = 'rgba(180,180,200,0.06)'; border = 'rgba(180,180,200,0.25)'; color = 'var(--text-muted)'; }
+          else                 { bg = 'rgba(180,180,200,0.04)'; border = 'rgba(180,180,200,0.18)'; color = 'var(--text-muted)'; }
+          return '<div class="pattern-chip" style="font-family:\'Source Code Pro\',monospace;font-size:9px;letter-spacing:0.5px;padding:5px 10px;border-radius:3px;background:' + bg + ';border:1px solid ' + border + ';color:' + color + ';transform:translateY(30px) scale(0.8);opacity:0;"><span style="opacity:0.8;">' + c.city.replace('Co. Sheriff','').trim() + '</span> ' + c.crime + ' <strong style="color:' + color + ';">#' + rank + '</strong></div>';
         }).join('')}
       </div>
     </div>
@@ -7958,12 +8046,16 @@ function renderPattern() {
         ${['MOST MURDERING','MOST RAPING','MOST ROBBING','MOST KIDNAPPING'].map(l => `<div class="pattern-stamp" style="display:inline-block;font-family:'Source Code Pro',monospace;font-size:11px;font-weight:700;color:#fff;background:var(--accent-red);padding:6px 16px;border-radius:3px;letter-spacing:1.8px;text-transform:uppercase;transform:scale(0);opacity:0;box-shadow:0 3px 10px rgba(230,57,70,0.35),inset 0 0 0 1px rgba(255,255,255,0.12);text-shadow:0 1px 2px rgba(0,0,0,0.4);">${l}</div>`).join('')}
       </div>
       <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-secondary);margin:14px 0 6px;">#1 interracial perpetrator across all four crime categories</div>
-      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);margin-bottom:14px;letter-spacing:0.5px;">Ranked #1 or #2 interracial perpetrator in every city:</div>
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);margin-bottom:14px;letter-spacing:0.5px;">Where Black ranks in each city × crime combination we have data for:</div>
       <div class="pattern-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
         ${combos.map((c,i) => {
-          const rank = c.suspectRank.indexOf('Black');
-          const isFirst = rank === 0;
-          return '<div class="pattern-chip" style="font-family:\'Source Code Pro\',monospace;font-size:9px;letter-spacing:0.5px;padding:5px 10px;border-radius:3px;background:' + (isFirst ? 'rgba(200,64,233,0.15)' : 'rgba(230,57,70,0.12)') + ';border:1px solid ' + (isFirst ? 'rgba(200,64,233,0.5)' : 'rgba(230,57,70,0.4)') + ';color:' + (isFirst ? 'var(--black)' : '#e63946') + ';transform:translateY(30px) scale(0.8);opacity:0;"><span style="opacity:0.8;">' + c.city.replace('Co. Sheriff','').trim() + '</span> ' + c.crime + ' <strong style="color:' + (isFirst ? 'var(--black)' : '#e63946') + ';">#' + (rank+1) + '</strong></div>';
+          const rank = c.suspectRank.indexOf('Black') + 1;
+          let bg, border, color;
+          if (rank === 1) { bg = 'rgba(200,64,233,0.18)'; border = 'rgba(200,64,233,0.55)'; color = 'var(--black)'; }
+          else if (rank === 2) { bg = 'rgba(230,57,70,0.13)'; border = 'rgba(230,57,70,0.42)'; color = '#e63946'; }
+          else if (rank === 3) { bg = 'rgba(180,180,200,0.06)'; border = 'rgba(180,180,200,0.25)'; color = 'var(--text-muted)'; }
+          else                 { bg = 'rgba(180,180,200,0.04)'; border = 'rgba(180,180,200,0.18)'; color = 'var(--text-muted)'; }
+          return '<div class="pattern-chip" style="font-family:\'Source Code Pro\',monospace;font-size:9px;letter-spacing:0.5px;padding:5px 10px;border-radius:3px;background:' + bg + ';border:1px solid ' + border + ';color:' + color + ';transform:translateY(30px) scale(0.8);opacity:0;"><span style="opacity:0.8;">' + c.city.replace('Co. Sheriff','').trim() + '</span> ' + c.crime + ' <strong style="color:' + color + ';">#' + rank + '</strong></div>';
         }).join('')}
       </div>
       <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-secondary);margin-top:16px;">#2 source: <strong style="color:var(--hispanic);">Hispanic</strong> (${ht.inter.toLocaleString()} interracial attacks)</div>
@@ -7993,7 +8085,7 @@ function renderPattern() {
             stamp.style.animation = 'stampSlam 0.5s cubic-bezier(0.22, 0.68, 0.35, 1.2) forwards';
           }, 300 + i * 180);
         });
-        // Chips shoot in
+        // Chips fly up
         chips.forEach((chip, i) => {
           chip.style.transition = 'none';
           chip.style.transform = 'translateY(30px) scale(0.8)';
@@ -8249,6 +8341,38 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000);
   });
 
+  // Dynamic nav-height handling: the nav wraps to multiple rows on mobile,
+  // so a hardcoded 70px clearance was wrong. Measure the actual nav height
+  // and update scroll-padding-top for native anchor scrolls + expose a
+  // helper for explicit JS scrolls.
+  function updateNavOffset() {
+    const nav = document.getElementById('nav');
+    if (!nav) return;
+    // Use bounding rect height (accounts for sub-pixel + transforms in some cases).
+    // If nav is hidden via translateY, offsetHeight still gives the real layout height.
+    const navH = nav.offsetHeight || 70;
+    const padding = navH + 16; // 16px breathing room below the nav
+    document.documentElement.style.scrollPaddingTop = padding + 'px';
+    document.documentElement.style.setProperty('--nav-clearance', padding + 'px');
+  }
+  window.addEventListener('load', updateNavOffset);
+  window.addEventListener('resize', updateNavOffset);
+  // Run immediately too
+  updateNavOffset();
+  // Re-measure once everything settles (fonts, images can shift nav height)
+  setTimeout(updateNavOffset, 500);
+  setTimeout(updateNavOffset, 2000);
+
+  // Reusable scroll-to-section that always uses real nav height
+  window.scrollToSection = function(id) {
+    const t = document.getElementById(id);
+    if (!t) return;
+    const nav = document.getElementById('nav');
+    const navH = nav ? nav.offsetHeight : 70;
+    const y = t.getBoundingClientRect().top + window.pageYOffset - navH - 16;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  };
+
   // Auto-start ambient audio on first user interaction (browsers block autoplay)
   function autoStartAudio() {
     if (!audioPlaying) {
@@ -8419,8 +8543,39 @@ document.addEventListener('DOMContentLoaded', () => {
       content.style.display = 'block';
       // Render any canvases inside this card now that they're visible
       if (window.objChartsInit) { window.objChartsInit(banner); }
+      // Inject scroll-hint badges above any horizontally-scrolling element
+      injectScrollHints(content);
     }
   };
+
+  // Inject a real-DOM scroll-hint badge above every horizontally-scrollable
+  // table/chart/grid in the given container. Idempotent — won't inject twice.
+  function injectScrollHints(scope) {
+    const targets = scope.querySelectorAll(
+      '.obj-table-wrap, .obj-chart-wide, .obj-multi-card, .obj-jur-row'
+    );
+    targets.forEach(t => {
+      if (t.dataset.scrollHinted) return;
+      // Only inject if the element actually overflows (its scrollWidth > clientWidth).
+      // Use a small delay to let layout settle first.
+      requestAnimationFrame(() => {
+        const overflows = t.scrollWidth > t.clientWidth + 4;
+        if (!overflows && window.innerWidth > 680) return;
+        const hint = document.createElement('div');
+        hint.className = 'scroll-hint-badge';
+        hint.innerHTML = '<span class="arrow">↔</span> Swipe to see more <span class="arrow">↔</span>';
+        t.parentNode.insertBefore(hint, t);
+        t.dataset.scrollHinted = '1';
+      });
+    });
+  }
+
+  // Also run on resize (e.g. orientation change) for any already-open content
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.obj-content').forEach(c => {
+      if (c.style.display === 'block') injectScrollHints(c);
+    });
+  });
   window.closeObjModal = function(id) {
     const m = document.getElementById(id);
     if (m) { m.classList.remove('active'); document.body.style.overflow = ''; }
