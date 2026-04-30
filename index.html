@@ -8151,6 +8151,11 @@ function renderPattern() {
   const suspectTotals = {};
   const combos = [];
   let blackOnWhite = 0; // attacks where suspect=Black AND victim=White (for Black-card stat 3)
+  let whiteOnBlack = 0; // attacks where suspect=White AND victim=Black (for ZERO-EXCEPTIONS card)
+  let hispanicOnWhite = 0; // for Hispanic-vs-White card
+  let whiteOnHispanic = 0;
+  const bvwCombos = []; // per-combo B-on-W vs W-on-B for ZERO-EXCEPTIONS card
+  const hvwCombos = []; // per-combo H-on-W vs W-on-H for Hispanic card
   races.forEach(r => { victimTotals[r] = {total:0, inter:0}; suspectTotals[r] = {total:0, inter:0}; });
   Object.entries(cityData).forEach(([cityId, city]) => {
     Object.entries(city.crimes).forEach(([ck, crime]) => {
@@ -8158,6 +8163,31 @@ function renderPattern() {
       // Track Black -> White specifically
       if (crime.details['Black'] && crime.details['Black']['White']) {
         blackOnWhite += crime.details['Black']['White'];
+      }
+      // Track White -> Black specifically (for ZERO-EXCEPTIONS card)
+      if (crime.details['White'] && crime.details['White']['Black']) {
+        whiteOnBlack += crime.details['White']['Black'];
+      }
+      // Track Hispanic <-> White (for Hispanic card)
+      if (crime.details['Hispanic'] && crime.details['Hispanic']['White']) {
+        hispanicOnWhite += crime.details['Hispanic']['White'];
+      }
+      if (crime.details['White'] && crime.details['White']['Hispanic']) {
+        whiteOnHispanic += crime.details['White']['Hispanic'];
+      }
+      // Per-combo B-vs-W tracking (only for combos that have both populations)
+      const hasBlack = crime.details['Black'] !== undefined;
+      const hasWhite = crime.details['White'] !== undefined;
+      const hasHispanic = crime.details['Hispanic'] !== undefined;
+      if (hasBlack && hasWhite) {
+        const bw = (crime.details['Black'] && crime.details['Black']['White']) || 0;
+        const wb = (crime.details['White'] && crime.details['White']['Black']) || 0;
+        bvwCombos.push({ city: city.name, crime: crime.label, bw: bw, wb: wb });
+      }
+      if (hasHispanic && hasWhite) {
+        const hw = (crime.details['Hispanic'] && crime.details['Hispanic']['White']) || 0;
+        const wh = (crime.details['White'] && crime.details['White']['Hispanic']) || 0;
+        hvwCombos.push({ city: city.name, crime: crime.label, hw: hw, wh: wh });
       }
       const pr = Object.keys(city.population);
       const victimRanked = pr.map(v => {
@@ -8294,7 +8324,86 @@ function renderPattern() {
           return '<div class="pattern-chip" style="font-family:\'Source Code Pro\',monospace;font-size:9px;letter-spacing:0.5px;padding:5px 10px;border-radius:3px;background:' + bg + ';border:1px solid ' + border + ';color:' + color + ';transform:translateY(30px) scale(0.8);opacity:0;"><span style="opacity:0.8;">' + c.city.replace('Co. Sheriff','').trim() + '</span> ' + c.crime + ' <strong style="color:' + color + ';">#' + rank + '</strong></div>';
         }).join('')}
       </div>
-      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-secondary);margin-top:16px;">#2 source: <strong style="color:var(--hispanic);">Hispanic</strong> (${ht.inter.toLocaleString()} interracial attacks)</div>
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:11px;color:var(--text-secondary);margin-top:16px;">#2 source: <strong style="color:var(--hispanic-race);">Hispanic</strong> (${ht.inter.toLocaleString()} interracial attacks)</div>
+    </div>
+
+    <div class="pattern-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:32px 24px;margin-bottom:28px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--accent-red),transparent);"></div>
+      <div style="text-align:center;">
+        <div style="font-family:'Source Code Pro',monospace;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-red);margin-bottom:6px;">Finding</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:clamp(15px,1.8vw,20px);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-primary);margin-bottom:6px;">Black-on-White vs. White-on-Black</div>
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(36px,5.5vw,54px);color:var(--accent-red);letter-spacing:3px;text-shadow:0 0 30px rgba(230,57,70,0.45);font-weight:900;">ZERO EXCEPTIONS</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:clamp(11px,1.2vw,13px);color:var(--text-secondary);margin-top:14px;line-height:1.55;max-width:680px;margin-left:auto;margin-right:auto;">In every single city &times; crime combination we have data for, Black suspects attacked White victims more than the reverse.</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin:28px 0 8px;">
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--accent-red);text-shadow:0 0 24px rgba(230,57,70,0.4);">${bvwCombos.filter(c => c.bw > c.wb).length}/${bvwCombos.length}</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">COMBOS WHERE B&rarr;W EXCEEDED W&rarr;B</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--accent-red);text-shadow:0 0 24px rgba(230,57,70,0.4);">${whiteOnBlack > 0 ? (blackOnWhite / whiteOnBlack).toFixed(1) : '\u221E'}&times;</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">AGGREGATE RATIO</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--text-primary);text-shadow:0 0 24px rgba(255,255,255,0.15);">${blackOnWhite.toLocaleString()} <span style="color:var(--text-muted);font-size:30px;">vs</span> ${whiteOnBlack.toLocaleString()}</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">TOTAL B&rarr;W <span style="opacity:0.5;">vs</span> TOTAL W&rarr;B</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);margin:22px 0 10px;letter-spacing:0.5px;">Per-combo breakdown &mdash; verify each cell yourself:</div>
+      <div class="pattern-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+        ${bvwCombos.map(c => {
+          const ratio = c.wb > 0 ? (c.bw / c.wb).toFixed(1) + '\u00d7' : '\u221E';
+          const cityShort = c.city.replace('Co. Sheriff','').trim();
+          return '<div class="pattern-chip" style="font-family:\'Source Code Pro\',monospace;font-size:9px;letter-spacing:0.5px;padding:5px 10px;border-radius:3px;background:rgba(230,57,70,0.10);border:1px solid rgba(230,57,70,0.42);color:var(--text-primary);transform:translateY(30px) scale(0.8);opacity:0;"><span style="opacity:0.85;">' + cityShort + '</span> ' + c.crime + ' <strong style="color:var(--accent-red);">' + ratio + '</strong> <span style="opacity:0.5;">(' + c.bw + ' vs ' + c.wb + ')</span></div>';
+        }).join('')}
+      </div>
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);margin-top:18px;letter-spacing:0.5px;font-style:italic;opacity:0.85;">Lowest ratio: ${(() => { const ratios = bvwCombos.filter(c => c.wb > 0).map(c => c.bw / c.wb); return ratios.length ? Math.min(...ratios).toFixed(1) : '&mdash;'; })()}&times;. Highest ratio: ${bvwCombos.some(c => c.wb === 0) ? '&infin; (W&rarr;B = 0)' : (() => { const ratios = bvwCombos.map(c => c.bw / c.wb); return Math.max(...ratios).toFixed(1) + '\u00d7'; })()}.</div>
+    </div>
+
+    <div class="pattern-card" style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:32px 24px;margin-bottom:28px;position:relative;overflow:hidden;">
+      <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,transparent,var(--hispanic-race),transparent);"></div>
+      <div style="text-align:center;">
+        <div style="font-family:'Source Code Pro',monospace;font-size:9px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--accent-red);margin-bottom:6px;">Finding</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:clamp(15px,1.8vw,20px);font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--text-primary);margin-bottom:6px;">Hispanic-on-White vs. White-on-Hispanic</div>
+        <div style="font-family:'Playfair Display',serif;font-size:clamp(34px,5vw,50px);color:var(--hispanic-race);letter-spacing:2px;text-shadow:0 0 30px rgba(232,133,58,0.45);font-weight:900;">${hvwCombos.filter(c => c.hw > c.wh).length} OF ${hvwCombos.length} COMBOS</div>
+        <div style="font-family:'Source Code Pro',monospace;font-size:clamp(11px,1.2vw,13px);color:var(--text-secondary);margin-top:14px;line-height:1.55;max-width:680px;margin-left:auto;margin-right:auto;">Hispanic suspects attacked White victims more than the reverse in ${hvwCombos.filter(c => c.hw > c.wh).length} of ${hvwCombos.length} city &times; crime combinations.</div>
+      </div>
+      <div style="display:flex;justify-content:center;gap:28px;flex-wrap:wrap;margin:28px 0 8px;">
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--hispanic-race);text-shadow:0 0 24px rgba(232,133,58,0.4);">${whiteOnHispanic > 0 ? (hispanicOnWhite / whiteOnHispanic).toFixed(1) : '\u221E'}&times;</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">AGGREGATE RATIO</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--text-primary);text-shadow:0 0 24px rgba(255,255,255,0.15);">${hispanicOnWhite.toLocaleString()} <span style="color:var(--text-muted);font-size:30px;">vs</span> ${whiteOnHispanic.toLocaleString()}</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">TOTAL H&rarr;W <span style="opacity:0.5;">vs</span> TOTAL W&rarr;H</div>
+        </div>
+        <div style="text-align:center;">
+          <div class="pattern-big-num" style="font-family:'Source Code Pro',monospace;font-size:44px;font-weight:800;color:var(--hispanic-race);text-shadow:0 0 24px rgba(232,133,58,0.4);">+${(hispanicOnWhite - whiteOnHispanic).toLocaleString()}</div>
+          <div style="font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-top:2px;">NET HISPANIC EXCESS</div>
+        </div>
+      </div>
+      <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:9px;color:var(--text-muted);margin:22px 0 10px;letter-spacing:0.5px;">Per-combo breakdown:</div>
+      <div class="pattern-chips" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+        ${hvwCombos.map(c => {
+          const ratio = c.wh > 0 ? (c.hw / c.wh).toFixed(1) + '\u00d7' : '\u221E';
+          const cityShort = c.city.replace('Co. Sheriff','').trim();
+          const isException = c.wh > c.hw;
+          const bg = isException ? 'rgba(180,180,200,0.08)' : 'rgba(232,133,58,0.10)';
+          const border = isException ? 'rgba(180,180,200,0.35)' : 'rgba(232,133,58,0.42)';
+          const ratioColor = isException ? 'var(--text-muted)' : 'var(--hispanic-race)';
+          const tag = isException ? ' <span style="color:var(--text-muted);font-size:8px;letter-spacing:1px;text-transform:uppercase;opacity:0.85;">(W more)</span>' : '';
+          return '<div class="pattern-chip" style="font-family:\'Source Code Pro\',monospace;font-size:9px;letter-spacing:0.5px;padding:5px 10px;border-radius:3px;background:' + bg + ';border:1px solid ' + border + ';color:var(--text-primary);transform:translateY(30px) scale(0.8);opacity:0;"><span style="opacity:0.85;">' + cityShort + '</span> ' + c.crime + ' <strong style="color:' + ratioColor + ';">' + ratio + '</strong> <span style="opacity:0.5;">(' + c.hw + ' vs ' + c.wh + ')</span>' + tag + '</div>';
+        }).join('')}
+      </div>
+      ${(() => {
+        const exceptions = hvwCombos.filter(c => c.wh > c.hw);
+        if (exceptions.length === 0) return '';
+        const exceptionExcess = exceptions.reduce((sum, c) => sum + (c.wh - c.hw), 0);
+        const netHadvantage = hispanicOnWhite - whiteOnHispanic;
+        const exceptionPct = (exceptionExcess / hispanicOnWhite * 100).toFixed(2);
+        const exceptionList = exceptions.map(c => c.city.replace('Co. Sheriff','').trim() + ' ' + c.crime + ' (W exceeded H by ' + (c.wh - c.hw) + ')').join(' and ');
+        return '<div style="margin-top:22px;padding:14px 18px;background:rgba(180,180,200,0.04);border:1px solid rgba(180,180,200,0.18);border-radius:6px;font-family:\'Source Code Pro\',monospace;font-size:10px;color:var(--text-secondary);line-height:1.7;letter-spacing:0.3px;max-width:700px;margin-left:auto;margin-right:auto;"><strong style="color:var(--text-primary);text-transform:uppercase;letter-spacing:1.2px;font-size:9px;">The two exceptions:</strong> ' + exceptionList + '. Combined, those two combos account for <strong style="color:var(--text-primary);">' + exceptionExcess + ' incidents</strong> in the opposite direction &mdash; <strong style="color:var(--text-primary);">' + exceptionPct + '%</strong> of total Hispanic-on-White attacks. The Hispanic-on-White net excess is <strong style="color:var(--hispanic-race);">' + netHadvantage.toLocaleString() + '</strong>.</div>';
+      })()}
     </div>
 
     <div style="text-align:center;font-family:'Source Code Pro',monospace;font-size:10px;color:var(--text-muted);line-height:1.8;max-width:600px;margin:0 auto;padding:16px 0;">
